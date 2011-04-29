@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "guard-haml/version"
+require 'guard/haml'
 
 Gem::Specification.new do |s|
   s.name        = "guard-haml"
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'guard', '~> 0.3'
   s.add_dependency 'haml', '~> 3.0'
   
-  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
+  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README]
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 end
