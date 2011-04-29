@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'guard', '~> 0.3'
   s.add_dependency 'haml', '~> 3.0'
   
-  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README]
+  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 end
