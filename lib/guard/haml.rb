@@ -9,7 +9,7 @@ module Guard
     
     def initialize(watchers = [], options = {})
       @watchers, @options = watchers, options
-      @haml_options = options.delete(:haml_options)
+      @haml_options = options.delete(:haml_options) || {}
     end
     
     def compile_haml file
