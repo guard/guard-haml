@@ -8,12 +8,12 @@ As the gem name suggests this is a guard extension. Make sure you get [guard](ht
 
 Install the gem:
 
-  gem install guard-haml
+    gem install guard-haml
   
 Add it to your Gemfile if you're using bundler (you should)
   
-  gem 'guard-haml'
+    gem 'guard-haml'
   
 Add a basic guard setup:
   
-  guard init haml
+    guard init haml
