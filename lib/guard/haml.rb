@@ -9,11 +9,12 @@ module Guard
     
     def initialize(watchers = [], options = {})
       @watchers, @options = watchers, options
+      @haml_options = options.delete(:haml_options)
     end
     
     def compile_haml file
       content = File.new(file).read
-      engine = ::Haml::Engine.new(content)
+      engine = ::Haml::Engine.new(content, @haml_options)
       engine.render
     end
     
