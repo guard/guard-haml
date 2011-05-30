@@ -9,6 +9,7 @@ module Guard
     
     def initialize(watchers = [], options = {})
       @watchers, @options = watchers, options
+      @options[:output] ||= '.'
       @haml_options = options.delete(:haml_options) || {}
     end
     
@@ -16,6 +17,17 @@ module Guard
       content = File.new(file).read
       engine = ::Haml::Engine.new(content, @haml_options)
       engine.render
+    end
+
+    # Get the file path to output the html based on the file being
+    # built.  The output path is relative to where guard is being run.
+    #
+    # @param file [String] path to file being built
+    # @return [String] path to file where output should be written
+    #
+    def get_output(file)
+      FileUtils.mkdir_p(@options[:output])
+      File.join(@options[:output], File.basename(file).split('.')[0..-2].join('.'))
     end
     
     def run_all
@@ -29,7 +41,7 @@ module Guard
   
     def run_on_change(paths)
       paths.each do |file|
-        output_file = file.split('.')[0..-2].join('.')
+        output_file = get_output(file)
         File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
         puts "# compiled haml in '#{file}' to html in '#{output_file}'"
       end
