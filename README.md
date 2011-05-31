@@ -17,3 +17,12 @@ Add it to your Gemfile if you're using bundler (you should)
 Add a basic guard setup:
   
     guard init haml
+
+If you want to change the output directory use the `output` option in your
+Guardfile, e.g.:
+
+    guard 'haml', :output => 'public' do
+      watch %r{^src/.+(\.html\.haml)}
+    end
+
+This output is relative to the Guardfile.
