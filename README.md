@@ -18,6 +18,8 @@ Add a basic guard setup:
   
     guard init haml
 
+## Options
+
 If you want to change the output directory use the `output` option in your
 Guardfile, e.g.:
 
