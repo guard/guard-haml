@@ -9,7 +9,6 @@ module Guard
     
     def initialize(watchers = [], options = {})
       @watchers, @options = watchers, options
-      @options[:output] ||= '.'
       @haml_options = options.delete(:haml_options) || {}
     end
     
@@ -26,8 +25,12 @@ module Guard
     # @return [String] path to file where output should be written
     #
     def get_output(file)
-      FileUtils.mkdir_p(@options[:output])
-      File.join(@options[:output], File.basename(file).split('.')[0..-2].join('.'))
+      if @options[:output]
+        FileUtils.mkdir_p(@options[:output])
+        File.join(@options[:output], File.basename(file).split('.')[0..-2].join('.'))
+      else
+        file.split('.')[0..-2].join('.')
+      end
     end
     
     def run_all
