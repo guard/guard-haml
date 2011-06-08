@@ -27,7 +27,8 @@ module Guard
     def get_output(file)
       if @options[:output]
         FileUtils.mkdir_p(@options[:output])
-        File.join(@options[:output], File.basename(file).split('.')[0..-2].join('.'))
+        FileUtils.mkdir_p(File.dirname(file))
+        File.join(@options[:output], File.dirname(file), File.basename(file).split('.')[0..-2].join('.'))
       else
         file.split('.')[0..-2].join('.')
       end
