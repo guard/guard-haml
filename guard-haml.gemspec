@@ -1,5 +1,4 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
 require 'guard/haml'
 
 Gem::Specification.new do |s|
@@ -14,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "guard-haml"
   
-  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
+  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md Gemfile]
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.require_paths = ["lib"]
 end
