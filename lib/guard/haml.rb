@@ -1,6 +1,7 @@
 require 'guard'
 require 'guard/guard'
 require 'guard/watcher'
+
 require 'haml'
 
 module Guard
@@ -30,7 +31,7 @@ module Guard
       if @options[:output]
         output_folder = File.join( @options[:output], File.dirname(file) )
         FileUtils.mkdir_p(output_folder)
-        file_name = File.basename(file).split('.')[0] 
+        file_name = File.basename(file).split('.').first
         File.join(output_folder, file_name + '.html')
       else
         file.split('.')[0..-2].join('.')

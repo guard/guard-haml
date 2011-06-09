@@ -1,6 +1,8 @@
 # A sample Gemfile
 source "http://rubygems.org"
 
+gemspec
+
 gem 'rspec'
 
 gem 'guard', '~> 0.3'
