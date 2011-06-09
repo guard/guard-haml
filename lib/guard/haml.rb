@@ -6,8 +6,6 @@ require 'haml'
 module Guard
   class Haml < Guard
     
-    VERSION = '0.3.0'
-    
     def initialize(watchers = [], options = {})
       super(watchers, {
         :notifications => true      
