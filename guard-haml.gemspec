@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/guard/haml', __FILE__)
+require File.expand_path('../lib/guard/haml/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "guard-haml"
-  s.version     = Guard::Haml::VERSION
+  s.version     = Guard::HamlVersion::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Immanuel Häussermann"]
   s.email       = ["haeussermann@gmail.com"]
