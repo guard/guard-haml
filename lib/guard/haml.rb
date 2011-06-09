@@ -29,7 +29,7 @@ module Guard
     #
     def get_output(file)
       if @options[:output]
-        output_folder = File.join( @options[:output], File.dirname(file) )
+        output_folder = File.join('..',  @options[:output], File.dirname(file) )
         FileUtils.mkdir_p(output_folder)
         file_name = File.basename(file).split('.').first
         File.join(output_folder, file_name + '.html')
