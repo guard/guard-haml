@@ -1,13 +1,17 @@
 require 'guard'
 require 'guard/guard'
+require 'guard/watcher'
 require 'haml'
 
 module Guard
   class Haml < Guard
     
-    VERSION = '0.2.0'
+    VERSION = '0.3.0'
     
     def initialize(watchers = [], options = {})
+      super(watchers, {
+        :notifications => true      
+      }.merge(options))
       @watchers, @options = watchers, options
       @haml_options = options.delete(:haml_options) || {}
     end
@@ -26,29 +30,41 @@ module Guard
     #
     def get_output(file)
       if @options[:output]
-        FileUtils.mkdir_p(@options[:output])
-        FileUtils.mkdir_p(File.dirname(file))
-        File.join(@options[:output], File.dirname(file), File.basename(file).split('.')[0..-2].join('.'))
+        output_folder = File.join( @options[:output], File.dirname(file) )
+        FileUtils.mkdir_p(output_folder)
+        file_name = File.basename(file).split('.')[0] 
+        File.join(output_folder, file_name + '.html')
       else
         file.split('.')[0..-2].join('.')
       end
     end
     
     def run_all
-      patterns = @watchers.map { |w| w.pattern }
-      files = Dir.glob('**/*.*')
-      paths = files.map do |file|
-        patterns.map  { |pattern| file if file.match(Regexp.new(pattern)) }
-      end
-      run_on_change(paths.flatten.compact)
+      run_on_change(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
+      #patterns = @watchers.map { |w| w.pattern }
+      #files = Dir.glob('**/*.*')
+      #paths = files.map do |file|
+      #  patterns.map  { |pattern| file if file.match(Regexp.new(pattern)) }
+      #end
+      #run_on_change(paths.flatten.compact)
     end
   
     def run_on_change(paths)
       paths.each do |file|
         output_file = get_output(file)
         File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
-        puts "# compiled haml in '#{file}' to html in '#{output_file}'"
+        ::Guard::UI.info "# compiled haml in '#{file}' to html in '#{output_file}'"
+        ::Guard::Notifier.notify("# compiled haml in #{file}", :title => "Guard::Haml", :image => :success) if @options[:notifications]
+      end
+      notify paths
+    end
+
+    def notify(changed_files)
+      ::Guard.guards.reject{ |guard| guard == self }.each do |guard|
+        paths = Watcher.match_files(guard, changed_files)
+        guard.run_on_change paths unless paths.empty?
       end
     end
+    
   end
 end
