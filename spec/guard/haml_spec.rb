@@ -49,15 +49,26 @@ EOS
   
   describe "getting path to output file" do
     it "should change extension to html" do
-      subject.options[:output] = "css"
+      subject.options[:output] = "html"
       r = subject.get_output("haml-test/_haml/index.haml")
       r.split('.')[1].should == "html"
     end
     
     it "should not change the file name" do
-      subject.options[:output] = "css"
+      subject.options[:output] = "html"
       r = subject.get_output("haml-test/_haml/index.haml")
       File.basename(r).split(".")[0].should == "index"
+    end
+
+    subject { Guard::Haml.new [], :output => 'html', :input => 'src'}
+
+    it "should remove input if input is passed" do
+
+      r = subject.get_output("src/index.haml")
+      r.should == "html/index.html"
+
+      r = subject.get_output("src/partials/_partial.haml")
+      r.should == "html/partials/_partial.html"
     end
   end
   

@@ -14,7 +14,6 @@ module Guard
       @watchers, @options = watchers, options
       @haml_options = options.delete(:haml_options) || {}
       @input_dir = options.delete(:input)
-      @input_dir += '/' if @input_dir && @input_dir[@input_dir.length-1] != '/'
     end
     
     def compile_haml file
@@ -32,7 +31,7 @@ module Guard
     def get_output(file)
       if @options[:output]
         file_dir = File.dirname(file)
-        file_dir = file_dir.sub!(@input_dir, '') if @input_dir
+        file_dir = file_dir.sub(@input_dir, '') if @input_dir
         output_folder = File.join(  @options[:output], file_dir )
         FileUtils.mkdir_p(output_folder)
         file_name = File.basename(file).split('.').first
