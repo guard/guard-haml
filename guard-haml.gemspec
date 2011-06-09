@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require 'guard/haml'
+require File.expand_path('../lib/guard/haml', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "guard-haml"
