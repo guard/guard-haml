@@ -28,3 +28,14 @@ Guardfile, e.g.:
     end
 
 This output is relative to the Guardfile.
+
+If you want to base all your hamls in a specific directory, and do not
+want that directory to be inside the output tree, you can specify the
+`input` option, e.g.:
+
+    guard 'haml', :output => 'public', :input => 'src' do
+      watch %r{^src/.+(\.html\.haml)}
+    end
+
+So when you edit a file `src/partials/_partial.haml`
+it will be outputted in `public/partials/_partial.html` without the `src`.
