@@ -46,6 +46,7 @@ module Guard
     def run_on_change(paths)
       paths.each do |file|
         output_file = get_output(file)
+        FileUtils.mkdir_p File.dirname(output_file)
         File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
         ::Guard::UI.info "# compiled haml in '#{file}' to html in '#{output_file}'"
         ::Guard::Notifier.notify("# compiled haml in #{file}", :title => "Guard::Haml", :image => :success) if @options[:notifications]
