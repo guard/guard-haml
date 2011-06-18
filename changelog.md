@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.3.0
+* Added the input option, to exclude a path from the output path. (github.com/draiken)
+
 ## 0.2.0
 * Added output option, to save compiled files into a different directory (github.com/Nemo157)
 

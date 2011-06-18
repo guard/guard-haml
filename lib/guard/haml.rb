@@ -1,7 +1,6 @@
 require 'guard'
 require 'guard/guard'
 require 'guard/watcher'
-
 require 'haml'
 
 module Guard
@@ -12,13 +11,11 @@ module Guard
         :notifications => true      
       }.merge(options))
       @watchers, @options = watchers, options
-      @haml_options = options.delete(:haml_options) || {}
-      @input_dir = options.delete(:input)
     end
     
     def compile_haml file
       content = File.new(file).read
-      engine = ::Haml::Engine.new(content, @haml_options)
+      engine = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
       engine.render
     end
 
@@ -29,26 +26,21 @@ module Guard
     # @return [String] path to file where output should be written
     #
     def get_output(file)
-      if @options[:output]
-        file_dir = File.dirname(file)
-        file_dir = file_dir.sub(@input_dir, '') if @input_dir
-        output_folder = File.join(  @options[:output], file_dir )
-        FileUtils.mkdir_p(output_folder)
-        file_name = File.basename(file).split('.').first
-        File.join(output_folder, file_name + '.html')
+      file_dir = File.dirname(file)
+      file_name = File.basename(file).split('.')[0..-2].join('.')
+      
+      file_dir = file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
+      file_dir = File.join(@options[:output], file_dir) if @options[:output]
+
+      if file_dir == ''
+        file_name
       else
-        file.split('.')[0..-2].join('.')
+        File.join(file_dir, file_name)
       end
     end
     
     def run_all
       run_on_change(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
-      #patterns = @watchers.map { |w| w.pattern }
-      #files = Dir.glob('**/*.*')
-      #paths = files.map do |file|
-      #  patterns.map  { |pattern| file if file.match(Regexp.new(pattern)) }
-      #end
-      #run_on_change(paths.flatten.compact)
     end
   
     def run_on_change(paths)
