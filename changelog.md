@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.3.1.
+* guard-haml is no longer crashing guard when HAML fails to compile
+
 ## 0.3.0
 * Added the input option, to exclude a path from the output path. (github.com/draiken)
 

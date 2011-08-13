@@ -15,8 +15,12 @@ module Guard
     
     def compile_haml file
       content = File.new(file).read
-      engine = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
-      engine.render
+      begin
+        engine = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
+        engine.render
+      rescue StandardError => error
+        ::Guard::UI.info "HAML Error: " + error.message
+      end
     end
 
     # Get the file path to output the html based on the file being
