@@ -7,10 +7,10 @@ module Guard
   class Haml < Guard
     
     def initialize(watchers = [], options = {})
-      super(watchers, {
-        :notifications => true      
-      }.merge(options))
-      @watchers, @options = watchers, options
+      @options = {
+        :notifications => true
+      }.merge(options)
+      super(watchers, @options)
     end
     
     def compile_haml file
