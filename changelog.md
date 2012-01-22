@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.3.2
+* Fix bug with ignored options in initialization. (github.com/ordinaryzelig)
+
 ## 0.3.1.
 * guard-haml is no longer crashing guard when HAML fails to compile
 
