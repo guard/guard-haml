@@ -20,6 +20,10 @@ describe Guard::Haml do
       it 'should return test/index.htm.haml as test/index.htm' do
         subject.get_output('test/index.htm.haml').should eq('test/index.htm')
       end
+
+      it 'should return test/index.haml as test/index.html' do
+        subject.get_output('test/index.haml').should eq('test/index.html')
+      end
     end
     
     context 'when the output option is set to "demo/output"' do
