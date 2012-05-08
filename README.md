@@ -38,6 +38,14 @@ If you maintain your haml files in a directory that should not be part of the ou
 So when you edit a file `src/partials/_partial.html.haml`
 it will be outputted in `public/partials/_partial.html` without the `src`.
 
+If you want to pass options to the Haml engine, you can set the `haml_options` option, e.g.:
+
+    guard 'haml', :output => 'public', :input => 'src', :haml_options => { :ugly => true } do
+      watch %r{^src/.+(\.html\.haml)}
+    end
+
+This will produce compressed HTML. See [Haml Reference](http://haml-lang.com/docs/yardoc/file.HAML_REFERENCE.html#options) for more details.
+
 ## Development
 
 * Source is hosted on [Github: guard-haml](https://github.com/manufaktor/guard-haml)
