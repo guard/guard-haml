@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 0.4
+* ensure guard 1.1 compatibility, use run_on_changes, throw :task_has_failed on error
+
 ## 0.3.3
 * appending .html to file name if the input file doesn't match the pattern *.html.haml or *.htm.haml ([@rtircher][])
 * Add documentation for :haml_options ([@zhangsu][])
