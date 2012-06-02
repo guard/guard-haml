@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = 'guard-haml'
 
-  s.add_dependency('guard', '>= 0.4')
+  s.add_dependency('guard', '>= 1.1beta')
   s.add_dependency('haml', '>= 3.0')
 
   s.add_development_dependency('rspec')

@@ -57,12 +57,16 @@ describe Guard::Haml do
     end
   end
   
-  describe 'building haml to html' do
+  describe '#run_on_changes' do
     it 'should notify other guards upon completion' do
-      other_guard = mock('guard')
-      other_guard.should_receive(:watchers).and_return([])
-      Guard.stub(:guards).and_return([subject, other_guard])
-      subject.notify([])
+      subject.should_receive(:notify).with([])
+      subject.run_on_changes([])
     end
-  end  
+  end
+
+  describe '#compile_haml' do
+    it 'throws :task_has_failed when an error occurs' do
+      expect { subject.compile_haml('') }.to throw_symbol :task_has_failed
+    end
+  end
 end

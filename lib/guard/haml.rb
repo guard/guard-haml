@@ -14,12 +14,13 @@ module Guard
     end
     
     def compile_haml file
-      content = File.new(file).read
       begin
-        engine = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
+        content = File.new(file).read
+        engine  = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
         engine.render
       rescue StandardError => error
-        ::Guard::UI.info "HAML Error: " + error.message
+        ::Guard::UI.error "HAML Error: " + error.message
+        throw :task_has_failed
       end
     end
 
@@ -46,10 +47,10 @@ module Guard
     end
     
     def run_all
-      run_on_change(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
+      run_on_changes(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
     end
   
-    def run_on_change(paths)
+    def run_on_changes(paths)
       paths.each do |file|
         output_file = get_output(file)
         FileUtils.mkdir_p File.dirname(output_file)
@@ -63,7 +64,7 @@ module Guard
     def notify(changed_files)
       ::Guard.guards.reject{ |guard| guard == self }.each do |guard|
         paths = Watcher.match_files(guard, changed_files)
-        guard.run_on_change paths unless paths.empty?
+        guard.run_on_changes paths unless paths.empty?
       end
     end
     
