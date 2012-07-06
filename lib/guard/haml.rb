@@ -12,7 +12,36 @@ module Guard
       }.merge(options)
       super(watchers, @options)
     end
-    
+
+    def start
+      run_all if @options[:run_at_start]
+    end
+
+    def stop
+      true
+    end
+
+    def reload
+      run_all
+    end
+
+    def run_all
+      run_on_changes(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
+    end
+  
+    def run_on_changes(paths)
+      paths.each do |file|
+        output_file = get_output(file)
+        FileUtils.mkdir_p File.dirname(output_file)
+        File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
+        ::Guard::UI.info "# compiled haml in '#{file}' to html in '#{output_file}'"
+        ::Guard::Notifier.notify("# compiled haml in #{file}", :title => "Guard::Haml", :image => :success) if @options[:notifications]
+      end
+      notify paths
+    end
+
+    private
+
     def compile_haml file
       begin
         content = File.new(file).read
@@ -25,7 +54,7 @@ module Guard
     end
 
     # Get the file path to output the html based on the file being
-    # built.  The output path is relative to where guard is being run.
+    # built. The output path is relative to where guard is being run.
     #
     # @param file [String] path to file being built
     # @return [String] path to file where output should be written
@@ -44,21 +73,6 @@ module Guard
       else
         File.join(file_dir, file_name)
       end
-    end
-    
-    def run_all
-      run_on_changes(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
-    end
-  
-    def run_on_changes(paths)
-      paths.each do |file|
-        output_file = get_output(file)
-        FileUtils.mkdir_p File.dirname(output_file)
-        File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
-        ::Guard::UI.info "# compiled haml in '#{file}' to html in '#{output_file}'"
-        ::Guard::Notifier.notify("# compiled haml in #{file}", :title => "Guard::Haml", :image => :success) if @options[:notifications]
-      end
-      notify paths
     end
 
     def notify(changed_files)
