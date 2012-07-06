@@ -5,6 +5,7 @@ require 'haml'
 
 module Guard
   class Haml < Guard
+    autoload :Notifier, 'guard/haml/notifier'
     
     def initialize(watchers = [], options = {})
       @options = {
@@ -34,10 +35,15 @@ module Guard
         output_file = get_output(file)
         FileUtils.mkdir_p File.dirname(output_file)
         File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
-        ::Guard::UI.info "# compiled haml in '#{file}' to html in '#{output_file}'"
-        ::Guard::Notifier.notify("# compiled haml in #{file}", :title => "Guard::Haml", :image => :success) if @options[:notifications]
+        message = "Successfully compiled haml in '#{file}' to html in '#{output_file}.'"
+        ::Guard::UI.info message
+        Notifier.notify( true, message ) if @options[:notifications]
       end
       notify paths
+    end
+
+    def compile file
+      compile_haml file
     end
 
     private
@@ -48,7 +54,9 @@ module Guard
         engine  = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
         engine.render
       rescue StandardError => error
-        ::Guard::UI.error "HAML Error: " + error.message
+        message = "HAML compilation failed!\nError: #{error.message}"
+        ::Guard::UI.error message
+        Notifier.notify( false, message ) if @options[:notifications]
         throw :task_has_failed
       end
     end

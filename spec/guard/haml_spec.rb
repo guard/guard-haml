@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Guard::Haml do
-  subject { Guard::Haml.new }
+  subject { described_class.new }
 
     describe '#start' do
       it 'should not call #run_all by default' do
@@ -110,11 +110,34 @@ describe Guard::Haml do
       subject.should_receive(:notify).with([])
       subject.run_on_changes([])
     end
+
+    context 'when notification option set to true' do
+      subject { described_class.new( [], :notifications => true ) }
+
+      after do
+        File.unlink "#{@fixture_path}/test.html"
+      end
+
+      it 'should call Notifier.notify' do
+        Guard::Haml::Notifier.should_receive(:notify).with(true, anything)
+        subject.run_on_changes(["#{@fixture_path}/test.html.haml"])
+      end
+    end
   end
 
   describe '#compile_haml' do
     it 'throws :task_has_failed when an error occurs' do
-      expect { subject.send(:compile_haml, '') }.to throw_symbol :task_has_failed
+      expect { subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml") }.
+              to throw_symbol :task_has_failed
     end
+
+    # context 'when notification option set to true' do
+    #   subject { described_class.new( [], :notifications => true ) }
+      
+    #   it 'should call Notifier.notify when an error occurs' do
+    #     Guard::Haml::Notifier.should_receive(:notify)#.with(true, anything)
+    #     subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
+    #   end  
+    # end
   end
 end
