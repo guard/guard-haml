@@ -42,10 +42,6 @@ module Guard
       notify paths
     end
 
-    def compile file
-      compile_haml file
-    end
-
     private
 
     def compile_haml file

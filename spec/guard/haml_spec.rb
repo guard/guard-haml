@@ -131,13 +131,16 @@ describe Guard::Haml do
               to throw_symbol :task_has_failed
     end
 
-    # context 'when notification option set to true' do
-    #   subject { described_class.new( [], :notifications => true ) }
+    context 'when notification option set to true' do
+      subject { described_class.new( [], :notifications => true ) }
       
-    #   it 'should call Notifier.notify when an error occurs' do
-    #     Guard::Haml::Notifier.should_receive(:notify)#.with(true, anything)
-    #     subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
-    #   end  
-    # end
+      it 'should call Notifier.notify when an error occurs' do
+        Guard::Haml::Notifier.should_receive(:notify).with(false, anything)
+        catch(:task_has_failed) do 
+          subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
+        end.should be_nil
+        
+      end  
+    end
   end
 end
