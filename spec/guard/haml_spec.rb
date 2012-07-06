@@ -44,16 +44,6 @@ describe Guard::Haml do
         subject.reload
       end
     end
-
-
-
-
-
-
-
-
-
-
   
   describe 'run all' do
     it 'should rebuild all files being watched' do
