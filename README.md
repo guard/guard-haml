@@ -2,7 +2,7 @@
 
 Guard yo Haml, guard yo html cuz they compilin errybody out here.
 
-[![Build Status](https://secure.travis-ci.org/kugaevsky/guard-haml.png?branch=master)](http://travis-ci.org/kugaevsky/guard-haml)
+[![Build Status](https://secure.travis-ci.org/manufaktor/guard-haml.png?branch=development)](http://travis-ci.org/manufaktor/guard-haml)
 
 ## Install
 
