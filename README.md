@@ -1,8 +1,6 @@
-# Guard::Haml
+# Guard::Haml [![Build Status](https://secure.travis-ci.org/kugaevsky/guard-haml.png?branch=master)](http://travis-ci.org/kugaevsky/guard-haml) [![Dependency Status](https://gemnasium.com/kugaevsky/guard-haml.png)]([https://gemnasium.com/kugaevsky/guard-haml) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/kugaevsky/guard-haml)
 
 Guard yo Haml, guard yo html cuz they compilin errybody out here.
-
-[![Build Status](https://secure.travis-ci.org/kugaevsky/guard-haml.png?branch=master)](http://travis-ci.org/kugaevsky/guard-haml)  [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/kugaevsky/guard-haml)
 
 ## Install
 
