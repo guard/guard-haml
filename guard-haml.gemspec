@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency('haml', '>= 3.0')
 
   s.add_development_dependency('rspec')
+  s.add_development_dependency('rake')
 
   s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md Gemfile]
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
