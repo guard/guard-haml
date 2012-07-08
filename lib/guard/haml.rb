@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'guard'
 require 'guard/guard'
 require 'guard/watcher'
@@ -29,13 +31,14 @@ module Guard
     def run_all
       run_on_changes(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
     end
-  
+
     def run_on_changes(paths)
       paths.each do |file|
         output_file = get_output(file)
         FileUtils.mkdir_p File.dirname(output_file)
         File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
-        message = "Successfully compiled haml in '#{file}' to html in '#{output_file}.'"
+        message = "Successfully compiled haml to html!\n"
+        message += "# #{file} → #{output_file}".gsub("#{Bundler.root.to_s}/", '')
         ::Guard::UI.info message
         Notifier.notify( true, message ) if @options[:notifications]
       end

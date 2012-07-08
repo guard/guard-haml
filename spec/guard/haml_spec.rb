@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require 'spec_helper'
 
 describe Guard::Haml do
@@ -52,14 +54,14 @@ describe Guard::Haml do
       subject.run_all
     end
   end
-  
+
   describe '#get_output' do
     context 'by default' do
       it 'should return test/index.html.haml as test/index.html' do
         subject.send(:get_output, 'test/index.html.haml').
                         should eq('test/index.html')
       end
-      
+
       it 'should return test/index.htm.haml as test/index.htm' do
         subject.send(:get_output, 'test/index.htm.haml').
                         should eq('test/index.htm')
@@ -70,33 +72,33 @@ describe Guard::Haml do
                         should eq('test/index.html')
       end
     end
-    
+
     context 'when the output option is set to "demo/output"' do
       before do
         subject.options[:output] = 'demo/output'
       end
-      
+
       it 'should return test/index.html.haml as demo/output/test/index.html.haml' do
         subject.send(:get_output, 'test/index.html.haml').
                   should eq('demo/output/test/index.html')
       end
     end
-    
+
     context 'when the exclude_base_dir option is set to "test/ignore"' do
       before do
         subject.options[:input] = 'test/ignore'
       end
-      
+
       it 'should return test/ignore/index.html.haml as index.html' do
         subject.send(:get_output, 'test/ignore/index.html.haml').
                                     should eq('index.html')
       end
-      
+
       context 'when the output option is set to "demo/output"' do
         before do
           subject.options[:output] = 'demo/output'
         end
-        
+
         it 'should return test/ignore/abc/index.html.haml as demo/output/abc/index.html' do
           subject.send(:get_output, 'test/ignore/abc/index.html.haml').
                           should eq('demo/output/abc/index.html')
@@ -104,14 +106,14 @@ describe Guard::Haml do
       end
     end
   end
-  
+
   describe '#run_on_changes' do
     it 'should notify other guards upon completion' do
       subject.should_receive(:notify).with([])
       subject.run_on_changes([])
     end
 
-    context 'when notification option set to true' do
+    context 'when notifications option set to true' do
       subject { described_class.new( [], :notifications => true ) }
 
       after do
@@ -119,7 +121,9 @@ describe Guard::Haml do
       end
 
       it 'should call Notifier.notify' do
-        Guard::Haml::Notifier.should_receive(:notify).with(true, anything)
+        message = "Successfully compiled haml to html!\n"
+        message += "# spec/fixtures/test.html.haml → spec/fixtures/test.html"
+        Guard::Haml::Notifier.should_receive(:notify).with(true, message)
         subject.run_on_changes(["#{@fixture_path}/test.html.haml"])
       end
     end
@@ -131,16 +135,18 @@ describe Guard::Haml do
               to throw_symbol :task_has_failed
     end
 
-    context 'when notification option set to true' do
+    context 'when notifications option set to true' do
       subject { described_class.new( [], :notifications => true ) }
-      
+
       it 'should call Notifier.notify when an error occurs' do
-        Guard::Haml::Notifier.should_receive(:notify).with(false, anything)
-        catch(:task_has_failed) do 
+        message = "HAML compilation failed!\n"
+        message += "Error: Illegal nesting: content can't be both given on the same line as %p and nested within it."
+        Guard::Haml::Notifier.should_receive(:notify).with(false, message)
+        catch(:task_has_failed) do
           subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
         end.should be_nil
-        
-      end  
+
+      end
     end
   end
 end
