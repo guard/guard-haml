@@ -11,13 +11,13 @@ As the gem name suggests this is a guard extension. Make sure you get [guard](ht
 Install the gem:
 
     gem install guard-haml
-  
+
 Add it to your Gemfile if you're using bundler (you should)
-  
+
     gem 'guard-haml'
-  
+
 Add a basic guard setup:
-  
+
     guard init haml
 
 ## Options
@@ -66,5 +66,5 @@ This will produce compressed HTML. See [Haml Reference](http://haml-lang.com/doc
 * Source is hosted on [Github: guard-haml](https://github.com/manufaktor/guard-haml)
 * Report issues/questions/feature requests on the [Github Issue tracker for guard-haml](https://github.com/manufaktor/guard-haml/issues)
 
-Pull requests are welcome. 
+Pull requests are welcome.
 Specs are very welcome, make sure you support both ruby 1.8.7 and  ruby 1.9.2.
