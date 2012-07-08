@@ -5,6 +5,29 @@ require 'spec_helper'
 describe Guard::Haml do
   subject { described_class.new }
 
+    describe "class" do
+      it 'should autoload Notifier class' do
+        expect { Guard::Haml::Notifier }.not_to raise_error
+      end
+    end
+
+    describe '#new' do
+      it 'should set default options to instance' do
+        subject.options[:notifications].should be_true
+      end
+
+      context "when there are options" do
+        subject { described_class.new( [],
+                                  :notifications => false,
+                                  :run_at_start => true) }
+
+        it 'should merge passed options to @options instance variable' do
+          subject.options[:notifications].should be_false
+          subject.options[:run_at_start].should be_true
+        end
+      end
+    end
+
     describe '#start' do
       it 'should not call #run_all by default' do
         subject.should_not_receive(:run_all).and_return(true)
@@ -46,8 +69,8 @@ describe Guard::Haml do
         subject.reload
       end
     end
-  
-  describe 'run all' do
+
+  describe '#run_all' do
     it 'should rebuild all files being watched' do
       Guard::Haml.stub(:run_on_change).with([]).and_return([])
       Guard.stub(:guards).and_return([subject])

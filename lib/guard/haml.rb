@@ -8,11 +8,11 @@ require 'haml'
 module Guard
   class Haml < Guard
     autoload :Notifier, 'guard/haml/notifier'
-    
+
     def initialize(watchers = [], options = {})
       @options = {
         :notifications => true
-      }.merge(options)
+      }.merge options
       super(watchers, @options)
     end
 
@@ -88,6 +88,5 @@ module Guard
         guard.run_on_changes paths unless paths.empty?
       end
     end
-    
   end
 end
