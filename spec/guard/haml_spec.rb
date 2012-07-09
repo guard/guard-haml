@@ -3,72 +3,69 @@
 require 'spec_helper'
 
 describe Guard::Haml do
-  subject { described_class.new }
+  let(:subject_with_options) { described_class.new( [],
+                                :notifications => false,
+                                :run_at_start => true) }
+  let(:subject_notifiable) { described_class.new( [],
+                                :notifications => true ) }
+  let(:notifier) { Guard::Haml::Notifier }
 
-    describe "class" do
-      it 'should autoload Notifier class' do
-        expect { Guard::Haml::Notifier }.not_to raise_error
-      end
+  describe "class" do
+    it 'should autoload Notifier class' do
+      expect { Guard::Haml::Notifier }.not_to raise_error
+    end
+  end
+
+  describe '#new' do
+    context 'notifications option by default' do
+      specify { subject.options[:notifications].should be_true }
     end
 
-    describe '#new' do
-      it 'should set default options to instance' do
-        subject.options[:notifications].should be_true
-      end
-
-      context "when there are options" do
-        subject { described_class.new( [],
-                                  :notifications => false,
-                                  :run_at_start => true) }
-
-        it 'should merge passed options to @options instance variable' do
-          subject.options[:notifications].should be_false
-          subject.options[:run_at_start].should be_true
-        end
+    context "when recieves options hash" do
+      it 'should merge it to @options instance variable' do
+        subject_with_options.options[:notifications].should be_false
+        subject_with_options.options[:run_at_start].should be_true
       end
     end
+  end
 
-    describe '#start' do
-      it 'should not call #run_all by default' do
+  describe '#start' do
+    context 'by default' do
+      it 'should not call #run_all' do
         subject.should_not_receive(:run_all).and_return(true)
         subject.start
       end
-
-      context 'when run_on_start option set to true' do
-        before do
-          subject.options[:run_at_start] = true
-        end
-
-        it 'should call #run_all' do
-          subject.should_receive(:run_all).and_return(true)
-          subject.start
-        end
-      end
-
-      context 'when run_on_start option set to false' do
-        before do
-          subject.options[:run_at_start] = false
-        end
-
-        it 'should not call #run_all' do
-          subject.should_not_receive(:run_all).and_return(true)
-          subject.start
-        end
-      end
     end
 
-    describe '#stop' do
-      it 'should return true' do
-        subject.stop.should be_true
-      end
-    end
-
-    describe '#reload' do
+    context 'when run_on_start option set to true' do
       it 'should call #run_all' do
-        subject.should_receive(:run_all).and_return(true)
-        subject.reload
+        subject_with_options.should_receive(:run_all).and_return(true)
+        subject_with_options.start
       end
     end
+
+    context 'when run_on_start option set to false' do
+      before do
+        subject.options[:run_at_start] = false
+      end
+
+      it 'should not call #run_all' do
+        subject.should_not_receive(:run_all).and_return(true)
+        subject.start
+      end
+    end
+  end
+
+  describe '#stop' do
+    specify { subject.stop.should be_true }
+  end
+
+  describe '#reload' do
+    it 'should call #run_all' do
+      subject.should_receive(:run_all).and_return(true)
+      subject.reload
+    end
+  end
 
   describe '#run_all' do
     it 'should rebuild all files being watched' do
@@ -137,8 +134,6 @@ describe Guard::Haml do
     end
 
     context 'when notifications option set to true' do
-      subject { described_class.new( [], :notifications => true ) }
-
       after do
         File.unlink "#{@fixture_path}/test.html"
       end
@@ -146,8 +141,8 @@ describe Guard::Haml do
       it 'should call Notifier.notify' do
         message = "Successfully compiled haml to html!\n"
         message += "# spec/fixtures/test.html.haml → spec/fixtures/test.html"
-        Guard::Haml::Notifier.should_receive(:notify).with(true, message)
-        subject.run_on_changes(["#{@fixture_path}/test.html.haml"])
+        notifier.should_receive(:notify).with(true, message)
+        subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
       end
     end
   end
@@ -159,14 +154,12 @@ describe Guard::Haml do
     end
 
     context 'when notifications option set to true' do
-      subject { described_class.new( [], :notifications => true ) }
-
       it 'should call Notifier.notify when an error occurs' do
         message = "HAML compilation failed!\n"
         message += "Error: Illegal nesting: content can't be both given on the same line as %p and nested within it."
-        Guard::Haml::Notifier.should_receive(:notify).with(false, message)
+        notifier.should_receive(:notify).with(false, message)
         catch(:task_has_failed) do
-          subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
+          subject_notifiable.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
         end.should be_nil
 
       end

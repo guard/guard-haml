@@ -5,15 +5,11 @@ describe Guard::Haml::Notifier do
 
   describe '#image' do
     context 'when recieves true' do
-      it 'should return :success' do
-        subject.image(true).should == :success
-      end
+      specify { subject.image(true).should be :success }
     end
 
     context 'when recieves false' do
-      it 'should select failed image' do
-        subject.image(false).should == :failed
-      end
+      specify { subject.image(false).should be :failed }
     end
   end
 
