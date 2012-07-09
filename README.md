@@ -57,7 +57,7 @@ If you want to pass options to the Haml engine, you can set the `haml_options` o
       watch %r{^src/.+(\.html\.haml)}
     end
 
-This will produce compressed HTML. See [Haml Reference](http://haml-lang.com/docs/yardoc/file.HAML_REFERENCE.html#options) for more details.
+This will produce compressed HTML. See [Haml Reference](http://haml.info/docs/yardoc/file.HAML_REFERENCE.html#options) for more details.
 
 ## Development
 
