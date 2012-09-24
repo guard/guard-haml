@@ -1,8 +1,9 @@
 # Guard::Haml
 
-Guard yo Haml, guard yo html cuz they compilin errybody out here.
+Watches HAML files, compiles them to HTML on change.
 
 [![Build Status](https://secure.travis-ci.org/manufaktor/guard-haml.png?branch=development)](http://travis-ci.org/manufaktor/guard-haml)
+
 
 ## Install
 
