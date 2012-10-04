@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'spec_helper'
 
 describe Guard::Haml do
@@ -147,7 +145,7 @@ describe Guard::Haml do
         end
 
         it 'should call Notifier.notify with 1 output' do
-          message = success_message + "# spec/fixtures/test.html.haml → spec/fixtures/test.html"
+          message = success_message + "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
           notifier.should_receive(:notify).with(true, message)
           subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
         end
@@ -164,7 +162,7 @@ describe Guard::Haml do
         end
 
         it 'should call Notifier.notify with 2 outputs' do
-          message = success_message + "# spec/fixtures/test.html.haml → spec/fixtures/test.html, spec/fixtures/test2.html"
+          message = success_message + "# spec/fixtures/test.html.haml -> spec/fixtures/test.html, spec/fixtures/test2.html"
           notifier.should_receive(:notify).with(true, message)
           subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
         end
