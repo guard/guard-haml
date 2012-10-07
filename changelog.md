@@ -2,6 +2,7 @@
 
 ## Development
 * Added new notifier, guard compatible methods, Travis-CI testing ([@kugaevsky])
+* Fixed encoding issue by using simple -> arrows ([@jamesgary])
 
 ## 0.4
 * ensure guard 1.1 compatibility, use run_on_changes, throw :task_has_failed on error
@@ -37,3 +38,4 @@
 [@Nemo157]: https://github.com/Nemo157
 [@draiken]: https://github.com/draiken
 [@kugaevsky]: https://github.com/kugaevsky
+[@jamesgary]: https://github.com/jamesgary
