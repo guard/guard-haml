@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'spec_helper'
 
 describe Guard::Haml do
@@ -140,7 +138,7 @@ describe Guard::Haml do
 
       it 'should call Notifier.notify' do
         message = "Successfully compiled haml to html!\n"
-        message += "# spec/fixtures/test.html.haml → spec/fixtures/test.html"
+        message += "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
         notifier.should_receive(:notify).with(true, message)
         subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
       end
