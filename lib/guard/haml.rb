@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'guard'
 require 'guard/guard'
 require 'guard/watcher'
@@ -38,7 +36,7 @@ module Guard
         FileUtils.mkdir_p File.dirname(output_file)
         File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
         message = "Successfully compiled haml to html!\n"
-        message += "# #{file} → #{output_file}".gsub("#{Bundler.root.to_s}/", '')
+        message += "# #{file} -> #{output_file}".gsub("#{Bundler.root.to_s}/", '')
         ::Guard::UI.info message
         Notifier.notify( true, message ) if @options[:notifications]
       end
