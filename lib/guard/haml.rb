@@ -64,7 +64,7 @@ module Guard
         engine  = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
         engine.render
       rescue StandardError => error
-        message = " # HAML compilation failed!\nError: #{error.message}"
+        message = "HAML compilation failed!\nError: #{error.message}"
         ::Guard::UI.error message
         Notifier.notify( false, message ) if @options[:notifications]
         raise message
