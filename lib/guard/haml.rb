@@ -9,7 +9,8 @@ module Guard
 
     def initialize(watchers = [], options = {})
       @options = {
-        :notifications => true
+        :notifications => true,
+        :error_to_haml => false
       }.merge options
       super(watchers, @options)
     end
@@ -34,9 +35,21 @@ module Guard
       paths.each do |file|
         output_file = get_output(file)
         FileUtils.mkdir_p File.dirname(output_file)
-        File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
+
+        File.open(output_file, 'w') do |f|
+            compilation_result = nil
+            begin
+              compilation_result = compile_haml(file)
+              f.write(compilation_result)
+            rescue Exception => error
+              f.write(error.message) if @options[:error_to_haml]
+              throw :task_has_failed
+            end 
+        end
+        
         message = "Successfully compiled haml to html!\n"
         message += "# #{file} -> #{output_file}".gsub("#{Bundler.root.to_s}/", '')
+
         ::Guard::UI.info message
         Notifier.notify( true, message ) if @options[:notifications]
       end
@@ -54,7 +67,7 @@ module Guard
         message = "HAML compilation failed!\nError: #{error.message}"
         ::Guard::UI.error message
         Notifier.notify( false, message ) if @options[:notifications]
-        throw :task_has_failed
+        raise message
       end
     end
 
