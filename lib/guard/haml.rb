@@ -9,7 +9,8 @@ module Guard
 
     def initialize(watchers = [], options = {})
       @options = {
-        :notifications => true
+        :notifications => true,
+        :error_to_haml => false
       }.merge options
       super(watchers, @options)
     end
@@ -54,6 +55,7 @@ module Guard
         message = "HAML compilation failed!\nError: #{error.message}"
         ::Guard::UI.error message
         Notifier.notify( false, message ) if @options[:notifications]
+        return "HAML compilation failed! " + error.message if @options[:error_to_haml]
         throw :task_has_failed
       end
     end
