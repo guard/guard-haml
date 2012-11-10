@@ -39,8 +39,15 @@ If you maintain your haml files in a directory that should not be part of the ou
     end
 
 So when you edit a file `src/partials/_partial.html.haml`
-it will be outputted in `public/partials/_partial.html` without the `src`.
+it will be saved to `public/partials/_partial.html` without the `src`.
 
+# Multiple output option
+
+This lets you compile to two (or more) html files from one haml file. This comes in handy if you want to compile to both a dev and prod build directory, for example:
+
+    guard 'haml', { :input => 'markup', :output => ['public/dev', 'public/build'] } do
+      watch(%r{^.+(\.haml)$})
+    end
 
 If you want to compile haml files on guard start you can use `run_at_start` option.
 
@@ -67,5 +74,4 @@ This will produce compressed HTML. See [Haml Reference](http://haml.info/docs/ya
 * Source is hosted on [Github: guard-haml](https://github.com/manufaktor/guard-haml)
 * Report issues/questions/feature requests on the [Github Issue tracker for guard-haml](https://github.com/manufaktor/guard-haml/issues)
 
-Pull requests are welcome.
-Specs are very welcome, make sure you support both ruby 1.8.7 and  ruby 1.9.2.
+Pull requests are welcome. If you are adding something new that is worth documenting, please do not forget to note it in the README.
