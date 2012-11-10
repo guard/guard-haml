@@ -75,19 +75,24 @@ describe Guard::Haml do
 
   describe '#get_output' do
     context 'by default' do
-      it 'should return test/index.html.haml as test/index.html' do
+      it 'should return test/index.html.haml as [test/index.html]' do
         subject.send(:get_output, 'test/index.html.haml').
-                        should eq('test/index.html')
+                        should eq(['test/index.html'])
       end
 
-      it 'should return test/index.htm.haml as test/index.htm' do
+      it 'should return test/index.htm.haml as [test/index.htm]' do
         subject.send(:get_output, 'test/index.htm.haml').
-                        should eq('test/index.htm')
+                        should eq(['test/index.htm'])
       end
 
-      it 'should return test/index.haml as test/index.html' do
+      it 'should return test/index.haml as [test/index.html]' do
         subject.send(:get_output, 'test/index.haml').
-                        should eq('test/index.html')
+                        should eq(['test/index.html'])
+      end
+
+      it 'should return [test/index1.html.haml, test/index2.html.haml] as [test/index1.html, test/index2.html]' do
+        subject.send(:get_output, ['test/index1.html.haml', 'test/index2.html.haml']).
+                        should eq(['test/index1.html', 'test/index2.html'])
       end
     end
 
@@ -96,9 +101,9 @@ describe Guard::Haml do
         subject.options[:output] = 'demo/output'
       end
 
-      it 'should return test/index.html.haml as demo/output/test/index.html.haml' do
+      it 'should return test/index.html.haml as [demo/output/test/index.html.haml]' do
         subject.send(:get_output, 'test/index.html.haml').
-                  should eq('demo/output/test/index.html')
+                  should eq(['demo/output/test/index.html'])
       end
     end
 
@@ -107,9 +112,9 @@ describe Guard::Haml do
         subject.options[:input] = 'test/ignore'
       end
 
-      it 'should return test/ignore/index.html.haml as index.html' do
+      it 'should return test/ignore/index.html.haml as [index.html]' do
         subject.send(:get_output, 'test/ignore/index.html.haml').
-                                    should eq('index.html')
+                                    should eq(['index.html'])
       end
 
       context 'when the output option is set to "demo/output"' do
@@ -117,9 +122,9 @@ describe Guard::Haml do
           subject.options[:output] = 'demo/output'
         end
 
-        it 'should return test/ignore/abc/index.html.haml as demo/output/abc/index.html' do
+        it 'should return test/ignore/abc/index.html.haml as [demo/output/abc/index.html]' do
           subject.send(:get_output, 'test/ignore/abc/index.html.haml').
-                          should eq('demo/output/abc/index.html')
+                          should eq(['demo/output/abc/index.html'])
         end
       end
     end
@@ -132,15 +137,43 @@ describe Guard::Haml do
     end
 
     context 'when notifications option set to true' do
-      after do
-        File.unlink "#{@fixture_path}/test.html"
+      let(:success_message) { "Successfully compiled haml to html!\n" }
+
+      context 'with one output' do
+        after do
+          File.unlink "#{@fixture_path}/test.html"
+        end
+
+        it 'should call Notifier.notify with 1 output' do
+          message = success_message + "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
+          notifier.should_receive(:notify).with(true, message)
+          subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
+        end
       end
+
 
       it 'should call Notifier.notify' do
         message = "Successfully compiled haml to html!\n"
         message += "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
         notifier.should_receive(:notify).with(true, message)
         subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
+      end
+
+      context 'with two outputs' do
+        before do
+          subject_notifiable.stub(:get_output).and_return(["#{@fixture_path}/test.html", "#{@fixture_path}/test2.html"])
+        end
+
+        after do
+          File.unlink "#{@fixture_path}/test.html"
+          File.unlink "#{@fixture_path}/test2.html"
+        end
+
+        it 'should call Notifier.notify with 2 outputs' do
+          message = success_message + "# spec/fixtures/test.html.haml -> spec/fixtures/test.html, spec/fixtures/test2.html"
+          notifier.should_receive(:notify).with(true, message)
+          subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
+        end
       end
     end
   end

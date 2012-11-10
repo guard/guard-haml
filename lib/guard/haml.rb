@@ -32,11 +32,13 @@ module Guard
 
     def run_on_changes(paths)
       paths.each do |file|
-        output_file = get_output(file)
-        FileUtils.mkdir_p File.dirname(output_file)
-        File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
+        output_files = get_output(file)
+        output_files.each do |output_file|
+          FileUtils.mkdir_p File.dirname(output_file)
+          File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
+        end
         message = "Successfully compiled haml to html!\n"
-        message += "# #{file} -> #{output_file}".gsub("#{Bundler.root.to_s}/", '')
+        message += "# #{file} -> #{output_files.join(', ')}".gsub("#{Bundler.root.to_s}/", '')
         ::Guard::UI.info message
         Notifier.notify( true, message ) if @options[:notifications]
       end
@@ -61,22 +63,24 @@ module Guard
     # Get the file path to output the html based on the file being
     # built. The output path is relative to where guard is being run.
     #
-    # @param file [String] path to file being built
-    # @return [String] path to file where output should be written
+    # @param file [String, Array<String>] path to file being built
+    # @return [Array<String>] path(s) to file where output should be written
     #
-    def get_output(file)
-      file_dir = File.dirname(file)
-      file_name = File.basename(file).split('.')[0..-2].join('.')
+    def get_output(files)
+      Array(files).map do |file|
+        file_dir = File.dirname(file)
+        file_name = File.basename(file).split('.')[0..-2].join('.')
 
-      file_name = "#{file_name}.html" if file_name.match("\.html?").nil?
+        file_name = "#{file_name}.html" if file_name.match("\.html?").nil?
 
-      file_dir = file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
-      file_dir = File.join(@options[:output], file_dir) if @options[:output]
+        file_dir = file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
+        file_dir = File.join(@options[:output], file_dir) if @options[:output]
 
-      if file_dir == ''
-        file_name
-      else
-        File.join(file_dir, file_name)
+        if file_dir == ''
+          file_name
+        else
+          File.join(file_dir, file_name)
+        end
       end
     end
 
