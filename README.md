@@ -23,6 +23,8 @@ Add a basic guard setup:
 
 ## Options
 
+### Configuring the output destination
+
 If you want to change the output directory use the `output` option in your
 Guardfile, e.g.:
 
@@ -31,6 +33,14 @@ Guardfile, e.g.:
     end
 
 This output is relative to the Guardfile.
+
+### Multiple output option
+
+This lets you compile to two (or more) html files from one haml file. This comes in handy if you want to compile to both a dev and prod build directory, for example:
+
+    guard 'haml', { :input => 'markup', :output => ['public/dev', 'public/build'] } do
+      watch(%r{^.+(\.haml)$})
+    end
 
 If you maintain your haml files in a directory that should not be part of the output path, you can set the `input` option, e.g.:
 
@@ -41,13 +51,7 @@ If you maintain your haml files in a directory that should not be part of the ou
 So when you edit a file `src/partials/_partial.html.haml`
 it will be saved to `public/partials/_partial.html` without the `src`.
 
-# Multiple output option
-
-This lets you compile to two (or more) html files from one haml file. This comes in handy if you want to compile to both a dev and prod build directory, for example:
-
-    guard 'haml', { :input => 'markup', :output => ['public/dev', 'public/build'] } do
-      watch(%r{^.+(\.haml)$})
-    end
+### Compile when starting guard
 
 If you want to compile haml files on guard start you can use `run_at_start` option.
 
@@ -55,11 +59,15 @@ If you want to compile haml files on guard start you can use `run_at_start` opti
       watch %r{^src/.+(\.html\.haml)}
     end
 
-Also you can configure gaurd notification (to Growl/lib-notify/Notifu) by setting `notifications` option to `true`
+### Guard notifications
+
+Also you can configure guard notifications (to Growl/lib-notify/Notifu) by setting `notifications` option to `true`
 
     guard 'haml', :output => 'public', :input => 'src', :notifications => true do
       watch %r{^src/.+(\.html\.haml)}
     end
+
+### Configuring HAML
 
 If you want to pass options to the Haml engine, you can set the `haml_options` option, e.g.:
 
