@@ -33,9 +33,10 @@ module Guard
     def run_on_changes(paths)
       paths.each do |file|
         output_files = get_output(file)
+        compiled_haml = compile_haml(file)
         output_files.each do |output_file|
           FileUtils.mkdir_p File.dirname(output_file)
-          File.open(output_file, 'w') { |f| f.write(compile_haml(file)) }
+          File.open(output_file, 'w') { |f| f.write(compiled_haml) }
         end
         message = "Successfully compiled haml to html!\n"
         message += "# #{file} -> #{output_files.join(', ')}".gsub("#{Bundler.root.to_s}/", '')
@@ -66,20 +67,21 @@ module Guard
     # @param file [String, Array<String>] path to file being built
     # @return [Array<String>] path(s) to file where output should be written
     #
-    def get_output(files)
-      Array(files).map do |file|
-        file_dir = File.dirname(file)
-        file_name = File.basename(file).split('.')[0..-2].join('.')
+    def get_output(file)
+      input_file_dir = File.dirname(file)
+      file_name = File.basename(file).split('.')[0..-2].join('.')
+      file_name = "#{file_name}.html" if file_name.match("\.html?").nil?
 
-        file_name = "#{file_name}.html" if file_name.match("\.html?").nil?
-
-        file_dir = file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
-        file_dir = File.join(@options[:output], file_dir) if @options[:output]
-
-        if file_dir == ''
-          file_name
+      input_file_dir = input_file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
+      if @options[:output]
+        Array(@options[:output]).map do |output_dir|
+          File.join(output_dir, input_file_dir, file_name)
+        end
+      else
+        if input_file_dir == ''
+          [file_name]
         else
-          File.join(file_dir, file_name)
+          [File.join(input_file_dir, file_name)]
         end
       end
     end
