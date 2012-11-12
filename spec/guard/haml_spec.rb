@@ -151,6 +151,13 @@ describe Guard::Haml do
         end
       end
 
+      it 'should call Notifier.notify' do
+        message = "Successfully compiled haml to html!\n"
+        message += "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
+        notifier.should_receive(:notify).with(true, message)
+        subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
+      end
+
       context 'with two outputs' do
         before do
           subject_notifiable.stub(:get_output).and_return(["#{@fixture_path}/test.html", "#{@fixture_path}/test2.html"])
