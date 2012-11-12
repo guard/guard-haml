@@ -89,11 +89,6 @@ describe Guard::Haml do
         subject.send(:get_output, 'test/index.haml').
                         should eq(['test/index.html'])
       end
-
-      it 'should return [test/index1.html.haml, test/index2.html.haml] as [test/index1.html, test/index2.html]' do
-        subject.send(:get_output, ['test/index1.html.haml', 'test/index2.html.haml']).
-                        should eq(['test/index1.html', 'test/index2.html'])
-      end
     end
 
     context 'when the output option is set to "demo/output"' do
@@ -104,6 +99,17 @@ describe Guard::Haml do
       it 'should return test/index.html.haml as [demo/output/test/index.html.haml]' do
         subject.send(:get_output, 'test/index.html.haml').
                   should eq(['demo/output/test/index.html'])
+      end
+    end
+
+    context 'when the output option is set to ["demo/output", "demo2/output"]' do
+      before do
+        subject.options[:output] = ['demo1/output', 'demo2/output']
+      end
+
+      it 'should return test/index.html.haml as [demo1/output/test/index.html.haml, demo2/output/test/index.html.haml]' do
+        subject.send(:get_output, 'test/index.html.haml').
+                  should eq(['demo1/output/test/index.html', 'demo2/output/test/index.html'])
       end
     end
 
