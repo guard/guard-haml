@@ -9,7 +9,8 @@ module Guard
 
     def initialize(watchers = [], options = {})
       @options = {
-        :notifications => true
+        :notifications => true,
+        :default_ext   => 'html'
       }.merge options
       super(watchers, @options)
     end
@@ -69,8 +70,8 @@ module Guard
     #
     def get_output(file)
       input_file_dir = File.dirname(file)
-      file_name = File.basename(file).split('.')[0..-2].join('.')
-      file_name = "#{file_name}.html" if file_name.match("\.html?").nil?
+
+      file_name = get_file_name(file)
 
       input_file_dir = input_file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
       if @options[:output]
@@ -83,6 +84,34 @@ module Guard
         else
           [File.join(input_file_dir, file_name)]
         end
+      end
+    end
+
+    # Generate a file name based on the provided file path.
+    # Provide a logical extension.
+    #
+    # Examples:
+    #   "path/foo.haml"     -> "foo.html"
+    #   "path/foo"          -> "foo.html"
+    #   "path/foo.bar"      -> "foo.bar.html"
+    #   "path/foo.bar.haml" -> "foo.bar"
+    #
+    # @param file String path to file
+    # @return String file name including extension
+    #
+    def get_file_name(file)
+      sub_strings           = File.basename(file).split('.')
+      base_name, extensions = sub_strings.first, sub_strings[1..-1]
+
+      if extensions.last == 'haml'
+        extensions.pop
+        if extensions.empty?
+          [base_name, @options[:default_ext]].join('.')
+        else
+          [base_name, extensions].flatten.join('.')
+        end
+      else
+        [base_name, extensions, @options[:default_ext]].flatten.join('.')
       end
     end
 
