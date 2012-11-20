@@ -55,10 +55,12 @@ it will be saved to `public/partials/_partial.html` without the `src`.
 
 The guard extension will try to add the correct extension based off the input file name. You can provide multiple extensions to control the file name.
 
-   "foo.haml"     -> "foo.html"
-   "foo"          -> "foo.html"
-   "foo.txt"      -> "foo.txt.html"
-   "foo.php.haml" -> "foo.php"
+```
+"foo.haml"     -> "foo.html"
+"foo"          -> "foo.html"
+"foo.txt"      -> "foo.txt.html"
+"foo.php.haml" -> "foo.php"
+```
 
 You can override the default extension (`html`) using the `default_ext` option:
 
