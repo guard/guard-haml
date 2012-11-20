@@ -87,6 +87,18 @@ module Guard
       end
     end
 
+    # Generate a file name based on the provided file path.
+    # Provide a logical extension.
+    #
+    # Examples:
+    #   "path/foo.haml"     -> "foo.html"
+    #   "path/foo"          -> "foo.html"
+    #   "path/foo.bar"      -> "foo.bar.html"
+    #   "path/foo.bar.haml" -> "foo.bar"
+    #
+    # @param file String path to file
+    # @return String file name including extension
+    #
     def get_file_name(file)
       sub_strings           = File.basename(file).split('.')
       base_name, extensions = sub_strings.first, sub_strings[1..-1]
