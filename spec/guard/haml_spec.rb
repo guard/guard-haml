@@ -113,6 +113,24 @@ describe Guard::Haml do
       end
     end
 
+    context 'when the default extensions is set to "txt"' do
+      before do
+        subject.options[:default_ext] = 'txt'
+      end
+
+      it 'should return test/index.haml as test/index.txt' do
+        subject.send(:get_output, 'test/index.haml').
+                  should eq(['test/index.txt'])
+      end
+
+      it 'should return test/index.php.haml as test/index.php due to the second extension' do
+        subject.send(:get_output, 'test/index.php.haml').
+                  should eq(['test/index.php'])
+      end
+    end
+
+
+
     context 'when the exclude_base_dir option is set to "test/ignore"' do
       before do
         subject.options[:input] = 'test/ignore'
