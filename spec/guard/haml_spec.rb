@@ -134,6 +134,43 @@ describe Guard::Haml do
         end
       end
     end
+
+    context 'when the input file contains a second extension"' do
+      it 'should return test/index.php.haml as [test/index.php]' do
+        subject.send(:get_output, 'test/index.php.haml').
+                        should eq(['test/index.php'])
+      end
+    end
+  end
+
+  describe '#get_file_name' do
+    context 'by default (if a ".haml" extension has been defined)' do
+      it 'should return the file name with the default extension ".html"' do
+        subject.send(:get_file_name, 'test/index.haml').
+                     should eq('index.html')
+      end
+    end
+
+    context 'if no extension has been defined at all' do
+      it 'should return the file name with the default extension ".html"' do
+        subject.send(:get_file_name, 'test/index').
+                     should eq('index.html')
+      end
+    end
+
+    context 'if an extension other than ".haml" has been defined' do
+      it 'should return the file name with the default extension ".html"' do
+        subject.send(:get_file_name, 'test/index.foo').
+                     should eq('index.foo.html')
+      end
+    end
+
+    context 'if multiple extensions including ".haml" have been defined' do
+      it 'should return the file name with the extension second to last' do
+        subject.send(:get_file_name, 'test/index.foo.haml').
+                     should eq('index.foo')
+      end
+    end
   end
 
   describe '#run_on_changes' do
