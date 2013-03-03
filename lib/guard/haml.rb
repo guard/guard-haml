@@ -9,7 +9,8 @@ module Guard
 
     def initialize(watchers = [], options = {})
       @options = {
-        :notifications => true
+        :notifications => true,
+        :auto_append_file_ext => true
       }.merge options
       super(watchers, @options)
     end
@@ -70,7 +71,7 @@ module Guard
     def get_output(file)
       input_file_dir = File.dirname(file)
       file_name = File.basename(file).split('.')[0..-2].join('.')
-      file_name = "#{file_name}.html" if file_name.match("\.html?").nil?
+      file_name = "#{file_name}.html" if append_file_ext_to_output_path?(file_name)
 
       input_file_dir = input_file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
       if @options[:output]
@@ -84,6 +85,11 @@ module Guard
           [File.join(input_file_dir, file_name)]
         end
       end
+    end
+
+    def append_file_ext_to_output_path?(file_name)
+      return unless @options[:auto_append_file_ext]
+      file_name.match("\.html?").nil?
     end
 
     def notify(changed_files)
