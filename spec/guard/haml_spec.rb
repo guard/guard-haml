@@ -6,6 +6,8 @@ describe Guard::Haml do
                                 :run_at_start => true) }
   let(:subject_notifiable) { described_class.new( [],
                                 :notifications => true ) }
+  let(:subject_with_layout) { described_class.new( [],
+                                :layout => :application ) }
   let(:notifier) { Guard::Haml::Notifier }
 
   describe "class" do

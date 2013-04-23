@@ -77,6 +77,16 @@ If you want to pass options to the Haml engine, you can set the `haml_options` o
 
 This will produce compressed HTML. See [Haml Reference](http://haml.info/docs/yardoc/file.HAML_REFERENCE.html#options) for more details.
 
+## Layouts
+
+If you are compiling a standalone HAML site, and want to have a layout file into which you yield templates, set the `layout` option to the name of the layout file, e.g.:
+
+    guard 'haml', :layout => :application do
+      watch %r{^src/.+(\.html\.haml)}
+    end
+
+This will produce compiled files where each other individual HAML file will be enclosed into `application.html.haml`.
+
 ## Development
 
 * Source is hosted on [Github: guard-haml](https://github.com/manufaktor/guard-haml)

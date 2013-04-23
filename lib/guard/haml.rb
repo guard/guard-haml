@@ -31,6 +31,7 @@ module Guard
     end
 
     def run_on_changes(paths)
+      paths = paths_without_layout paths
       paths.each do |file|
         output_files = get_output(file)
         compiled_haml = compile_haml(file)
@@ -48,11 +49,61 @@ module Guard
 
     private
 
+    def paths_without_layout paths = []
+      if layout_file_name
+        paths.reject { |path| path =~ /#{layout_file_name}/ }
+      else
+        paths
+      end
+    end
+
+    def layout_file_name
+      @layout_file_name ||= if @options[:layout]
+        "#{@options[:layout]}_layout"
+      end
+    end
+
+    def layout_file_path
+      @layout_file_path ||= if layout_file_name
+        Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))).find { |path| path =~ /#{layout_file_name}/ }
+      end
+    end
+
+    def layout
+      @layout ||= if layout_file_name
+        if layout_file_path
+          begin
+            if content_layout = File.new(layout_file_path).read
+              message = "HAML *layout* using: #{layout_file_path}"
+              ::Guard::UI.info message
+              Notifier.notify( true, message ) if @options[:notifications]
+              content_layout
+            end
+          rescue StandardError => error
+            message = "HAML *layout* file not found or unreadable!\nError: #{error.message}"
+            ::Guard::UI.error message
+            Notifier.notify( false, message ) if @options[:notifications]
+            throw :task_has_failed
+          end
+        else
+          message = "HAML *layout* file #{layout_file_name} not found or unreadable!"
+          ::Guard::UI.error message
+          Notifier.notify( false, message ) if @options[:notifications]
+          throw :task_has_failed
+        end
+      end
+    end
+
     def compile_haml file
       begin
         content = File.new(file).read
-        engine  = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
-        engine.render
+        if layout
+          ::Haml::Engine.new(layout, (@options[:haml_options] || {})).render do
+            ::Haml::Engine.new(content, (@options[:haml_options] || {})).render
+          end
+        else
+          ::Haml::Engine.new(content, (@options[:haml_options] || {})).render
+        end
       rescue StandardError => error
         message = "HAML compilation failed!\nError: #{error.message}"
         ::Guard::UI.error message
