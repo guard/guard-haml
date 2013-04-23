@@ -51,6 +51,23 @@ If you maintain your haml files in a directory that should not be part of the ou
 So when you edit a file `src/partials/_partial.html.haml`
 it will be saved to `public/partials/_partial.html` without the `src`.
 
+### File extensions
+
+The guard extension will try to add the correct extension based off the input file name. You can provide multiple extensions to control the file name.
+
+```
+"foo.haml"     -> "foo.html"
+"foo"          -> "foo.html"
+"foo.txt"      -> "foo.txt.html"
+"foo.php.haml" -> "foo.php"
+```
+
+You can override the default extension (`html`) using the `default_ext` option:
+
+    guard 'haml', :default_ext => 'txt' do
+      watch %r{^src/.+(\.html\.haml)}
+    end
+
 ### Compile when starting guard
 
 If you want to compile haml files on guard start you can use `run_at_start` option.
