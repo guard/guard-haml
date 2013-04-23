@@ -7,7 +7,7 @@
 * Added new notifier, guard compatible methods, Travis-CI testing ([@kugaevsky])
 * Fixed encoding issue by using simple -> arrows ([@jamesgary])
 * Enhance `output` option to allow multiple outputs destinations ([@jamesgary])
-* Added file extension detection ([@polarblau])
+* Added file extension detection, .html is no longer the default extension ([@polarblau], [@rickmzp])
 
 ## 0.4
 * ensure guard 1.1 compatibility, use run_on_changes, throw :task_has_failed on error
@@ -45,3 +45,4 @@
 [@kugaevsky]: https://github.com/kugaevsky
 [@jamesgary]: https://github.com/jamesgary
 [@polarblau]: https://github.com/polarblau
+[@rickmzp]: https://github.com/rickmzp
