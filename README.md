@@ -1,25 +1,25 @@
 # Guard::Haml
+[![Gem Version](https://badge.fury.io/rb/guard-haml.png)](http://badge.fury.io/rb/guard-haml) [![Build Status](https://travis-ci.org/guard/guard-haml.png?branch=master)](https://travis-ci.org/guard/guard-haml) [![Dependency Status](https://gemnasium.com/guard/guard-haml.png)](https://gemnasium.com/guard/guard-haml) [![Code Climate](https://codeclimate.com/github/guard/guard-haml.png)](https://codeclimate.com/github/guard/guard-haml) [![Coverage Status](https://coveralls.io/repos/guard/guard-haml/badge.png?branch=master)](https://coveralls.io/r/guard/guard-haml)
 
 Watches HAML files, compiles them to HTML on change.
 
-[![Build Status](https://secure.travis-ci.org/manufaktor/guard-haml.png?branch=development)](http://travis-ci.org/manufaktor/guard-haml)
-
-
 ## Install
 
-As the gem name suggests this is a guard extension. Make sure you get [guard](https://github.com/guard/guard) first.
+Please be sure to have [Guard](https://github.com/guard/guard) installed before continuing.
 
-Install the gem:
+Add the gem to your Gemfile (inside the `:development` or `:tool` group):
 
-    gem install guard-haml
+``` ruby
+group :development do
+  gem 'guard-haml'
+end
+```
 
-Add it to your Gemfile if you're using bundler (you should)
+Add guard definition to your Guardfile by running this command:
 
-    gem 'guard-haml'
-
-Add a basic guard setup:
-
-    guard init haml
+``` bash
+$ guard init haml
+```
 
 ## Options
 
@@ -28,9 +28,11 @@ Add a basic guard setup:
 If you want to change the output directory use the `output` option in your
 Guardfile, e.g.:
 
-    guard 'haml', :output => 'public' do
-      watch %r{^src/.+(\.html\.haml)}
-    end
+``` ruby
+guard 'haml', :output => 'public' do
+  watch %r{^src/.+(\.html\.haml)}
+end
+```
 
 This output is relative to the Guardfile.
 
@@ -38,16 +40,19 @@ This output is relative to the Guardfile.
 
 This lets you compile to two (or more) html files from one haml file. This comes in handy if you want to compile to both a dev and prod build directory, for example:
 
-    guard 'haml', { :input => 'markup', :output => ['public/dev', 'public/build'] } do
-      watch(%r{^.+(\.haml)$})
-    end
+``` ruby
+guard 'haml', { :input => 'markup', :output => ['public/dev', 'public/build'] } do
+  watch(%r{^.+(\.haml)$})
+end
+```
 
 If you maintain your haml files in a directory that should not be part of the output path, you can set the `input` option, e.g.:
 
-    guard 'haml', :output => 'public', :input => 'src' do
-      watch %r{^src/.+(\.html\.haml)}
-    end
-
+``` ruby
+guard 'haml', :output => 'public', :input => 'src' do
+  watch %r{^src/.+(\.html\.haml)}
+end
+```
 So when you edit a file `src/partials/_partial.html.haml`
 it will be saved to `public/partials/_partial.html` without the `src`.
 
@@ -55,7 +60,7 @@ it will be saved to `public/partials/_partial.html` without the `src`.
 
 The guard extension will try to add the correct extension based off the input file name. You can provide multiple extensions to control the file name.
 
-```
+``` ruby
 "foo.haml"     -> "foo.html"
 "foo"          -> "foo.html"
 "foo.txt"      -> "foo.txt.html"
@@ -64,39 +69,65 @@ The guard extension will try to add the correct extension based off the input fi
 
 You can override the default extension (`html`) using the `default_ext` option:
 
-    guard 'haml', :default_ext => 'txt' do
-      watch %r{^src/.+(\.html\.haml)}
-    end
+``` ruby
+guard 'haml', :default_ext => 'txt' do
+  watch %r{^src/.+(\.html\.haml)}
+end
+```
 
 ### Compile when starting guard
 
 If you want to compile haml files on guard start you can use `run_at_start` option.
 
-    guard 'haml', :output => 'public', :input => 'src', :run_at_start => true do
-      watch %r{^src/.+(\.html\.haml)}
-    end
+``` ruby
+guard 'haml', :output => 'public', :input => 'src', :run_at_start => true do
+  watch %r{^src/.+(\.html\.haml)}
+end
+```
 
 ### Guard notifications
 
 Also you can configure guard notifications (to Growl/lib-notify/Notifu) by setting `notifications` option to `true`
 
-    guard 'haml', :output => 'public', :input => 'src', :notifications => true do
-      watch %r{^src/.+(\.html\.haml)}
-    end
+``` ruby
+guard 'haml', :output => 'public', :input => 'src', :notifications => true do
+  watch %r{^src/.+(\.html\.haml)}
+end
+```
 
 ### Configuring HAML
 
 If you want to pass options to the Haml engine, you can set the `haml_options` option, e.g.:
 
-    guard 'haml', :output => 'public', :input => 'src', :haml_options => { :ugly => true } do
-      watch %r{^src/.+(\.html\.haml)}
-    end
+``` ruby
+guard 'haml', :output => 'public', :input => 'src', :haml_options => { :ugly => true } do
+  watch %r{^src/.+(\.html\.haml)}
+end
+```
 
 This will produce compressed HTML. See [Haml Reference](http://haml.info/docs/yardoc/file.HAML_REFERENCE.html#options) for more details.
 
 ## Development
 
-* Source is hosted on [Github: guard-haml](https://github.com/manufaktor/guard-haml)
-* Report issues/questions/feature requests on the [Github Issue tracker for guard-haml](https://github.com/manufaktor/guard-haml/issues)
+* Documentation hosted at [RubyDoc](http://rubydoc.info/gems/guard-haml/frames).
+* Source hosted at [GitHub](https://github.com/guard/guard-haml).
 
-Pull requests are welcome. If you are adding something new that is worth documenting, please do not forget to note it in the README.
+Pull requests are very welcome! Please try to follow these simple rules if applicable:
+
+* Please create a topic branch for every separate change you make.
+* Make sure your patches are well tested. All specs must pass on [Travis CI](https://travis-ci.org/guard/guard-haml).
+* Update the [Yard](http://yardoc.org/) documentation.
+* Update the [README](https://github.com/guard/guard-haml/blob/master/README.md).
+* Update the [CHANGELOG](https://github.com/guard/guard-haml/blob/master/CHANGELOG.md) for noteworthy changes (don't forget to run `bundle exec pimpmychangelog` and watch the magic happen)!
+* Please **do not change** the version number.
+
+For questions please join us in our [Google group](http://groups.google.com/group/guard-dev) or on
+`#guard` (irc.freenode.net).
+
+## Author
+
+[Immanuel Häussermann](https://github.com/manufaktor) ([@manufaktor](http://twitter.com/manufaktor), [manufaktor.com](http://manufaktor.com))
+
+## Contributors
+
+https://github.com/guard/guard-haml/contributors
