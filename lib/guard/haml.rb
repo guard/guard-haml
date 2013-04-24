@@ -41,7 +41,7 @@ module Guard
           File.open(output_file, 'w') { |f| f.write(compiled_haml) }
         end
         message = "Successfully compiled haml to html!\n"
-        message += "# #{file} -> #{output_files.join(', ')}".gsub("#{Bundler.root.to_s}/", '')
+        message += "# #{file} -> #{output_files.join(', ')}".gsub("#{::Bundler.root.to_s}/", '')
         ::Guard::UI.info message
         Notifier.notify( true, message ) if @options[:notifications]
       end
