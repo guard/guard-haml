@@ -11,7 +11,8 @@ module Guard
       @options = {
         :notifications => true,
         :default_ext   => 'html',
-        :auto_append_file_ext => false
+        :auto_append_file_ext => false,
+        :evironment_folder => false
       }.merge options
       super(watchers, @options)
     end
@@ -35,13 +36,13 @@ module Guard
     def run_on_changes(paths)
       paths.each do |file|
         output_files = get_output(file)
-        compiled_haml = compile_haml(file)
-        output_files.each do |output_file|
+        output_files.each do |output_file, env|
+          compiled_haml = compile_haml(file, env)
           FileUtils.mkdir_p File.dirname(output_file)
           File.open(output_file, 'w') { |f| f.write(compiled_haml) }
         end
         message = "Successfully compiled haml to html!\n"
-        message += "# #{file} -> #{output_files.join(', ')}".gsub("#{::Bundler.root.to_s}/", '')
+        message += "# #{file} -> #{output_files.map{|k,v| "#{k}"}.join(', ')}".gsub("#{::Bundler.root.to_s}/", '')
         ::Guard::UI.info message
         Notifier.notify( true, message ) if @options[:notifications]
       end
@@ -50,11 +51,11 @@ module Guard
 
     private
 
-    def compile_haml file
+    def compile_haml file, env=nil
       begin
         content = File.new(file).read
         engine  = ::Haml::Engine.new(content, (@options[:haml_options] || {}))
-        engine.render
+        engine.render(Object.new, :env =>env)
       rescue StandardError => error
         message = "HAML compilation failed!\nError: #{error.message}"
         ::Guard::UI.error message
@@ -75,8 +76,17 @@ module Guard
       file_name = "#{file_name}.html" if append_file_ext_to_output_path?(file_name)
       input_file_dir = input_file_dir.gsub(Regexp.new("#{@options[:input]}(\/){0,1}"), '') if @options[:input]
       if @options[:output]
-        Array(@options[:output]).map do |output_dir|
-          File.join(output_dir, input_file_dir, file_name)
+        if @options[:environment_folder]
+          Hash[
+            Array(@options[:output]).map do |output_dir|
+              env = output_dir.gsub(Regexp.new("#{output_dir}(.+){1,}"), '') 
+              [File.join(output_dir, input_file_dir, file_name), env]
+            end
+          ]
+        else
+          Array(@options[:output]).map do |output_dir|
+            File.join(output_dir, input_file_dir, file_name)
+          end
         end
       else
         if input_file_dir == ''
