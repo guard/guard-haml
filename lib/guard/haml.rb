@@ -1,19 +1,20 @@
 require 'guard'
-require 'guard/guard'
+require 'guard/plugin'
 require 'guard/watcher'
 require 'haml'
 
 module Guard
-  class Haml < Guard
+  class Haml < Plugin
     autoload :Notifier, 'guard/haml/notifier'
 
-    def initialize(watchers = [], options = {})
+    def initialize(options = {})
       @options = {
-        :notifications => true,
-        :default_ext   => 'html',
-        :auto_append_file_ext => false
+        notifications:        true,
+        default_ext:          'html',
+        auto_append_file_ext: false
       }.merge options
-      super(watchers, @options)
+
+      super(@options)
     end
 
     def start
