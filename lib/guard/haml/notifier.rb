@@ -10,8 +10,8 @@ module Guard
 
         def notify( result, message )
           ::Guard::Notifier.notify( message, 
-                                    :title => 'Guard::Haml', 
-                                    :image => image( result ) 
+                                    title: 'Guard::Haml', 
+                                    image: image( result ) 
                                   )
         end
       end
