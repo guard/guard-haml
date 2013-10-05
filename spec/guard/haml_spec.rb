@@ -1,11 +1,8 @@
 require 'spec_helper'
 
 describe Guard::Haml do
-  let(:subject_with_options) { described_class.new( [],
-                                :notifications => false,
-                                :run_at_start => true) }
-  let(:subject_notifiable) { described_class.new( [],
-                                :notifications => true ) }
+  let(:subject_with_options) { described_class.new(notifications: false, run_at_start: true) }
+  let(:subject_notifiable) { described_class.new(notifications: true ) }
   let(:notifier) { Guard::Haml::Notifier }
 
   describe "class" do
@@ -30,14 +27,14 @@ describe Guard::Haml do
   describe '#start' do
     context 'by default' do
       it 'should not call #run_all' do
-        subject.should_not_receive(:run_all).and_return(true)
+        subject.should_not_receive(:run_all)
         subject.start
       end
     end
 
     context 'when run_on_start option set to true' do
       it 'should call #run_all' do
-        subject_with_options.should_receive(:run_all).and_return(true)
+        subject_with_options.should_receive(:run_all)
         subject_with_options.start
       end
     end
@@ -48,7 +45,7 @@ describe Guard::Haml do
       end
 
       it 'should not call #run_all' do
-        subject.should_not_receive(:run_all).and_return(true)
+        subject.should_not_receive(:run_all)
         subject.start
       end
     end
