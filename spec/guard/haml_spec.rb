@@ -16,10 +16,19 @@ describe Guard::Haml do
       specify { subject.options[:notifications].should be_true }
     end
 
-    context "when recieves options hash" do
+    context "when receives options hash" do
       it 'should merge it to @options instance variable' do
         subject_with_options.options[:notifications].should be_false
         subject_with_options.options[:run_at_start].should be_true
+      end
+    end
+
+    context 'with no watchers and the :input option' do
+      let(:plugin) { described_class.new(input: 'markup') }
+
+      it 'generates watchers automatically' do
+        plugin.watchers.should have(1).item
+        plugin.watchers[0].pattern.should eq %r{^markup/(.+(\.html)?\.haml)$}
       end
     end
   end
@@ -70,20 +79,20 @@ describe Guard::Haml do
     end
   end
 
-  describe '#get_output' do
+  describe '#_output_paths' do
     context 'by default' do
       it 'should return test/index.html.haml as [test/index.html]' do
-        subject.send(:get_output, 'test/index.html.haml').
+        subject.send(:_output_paths, 'test/index.html.haml').
                         should eq(['test/index.html'])
       end
 
       it 'should return test/index.htm.haml as [test/index.htm]' do
-        subject.send(:get_output, 'test/index.htm.haml').
+        subject.send(:_output_paths, 'test/index.htm.haml').
                         should eq(['test/index.htm'])
       end
 
       it 'should return test/index.haml as [test/index.html]' do
-        subject.send(:get_output, 'test/index.haml').
+        subject.send(:_output_paths, 'test/index.haml').
                         should eq(['test/index.html'])
       end
     end
@@ -94,7 +103,7 @@ describe Guard::Haml do
       end
 
       it 'should return test/index.html.haml as [demo/output/test/index.html.haml]' do
-        subject.send(:get_output, 'test/index.html.haml').
+        subject.send(:_output_paths, 'test/index.html.haml').
                   should eq(['demo/output/test/index.html'])
       end
     end
@@ -105,7 +114,7 @@ describe Guard::Haml do
       end
 
       it 'should return test/index.html.haml as [demo1/output/test/index.html.haml, demo2/output/test/index.html.haml]' do
-        subject.send(:get_output, 'test/index.html.haml').
+        subject.send(:_output_paths, 'test/index.html.haml').
                   should eq(['demo1/output/test/index.html', 'demo2/output/test/index.html'])
       end
     end
@@ -116,12 +125,12 @@ describe Guard::Haml do
       end
 
       it 'should return test/index.haml as test/index.txt' do
-        subject.send(:get_output, 'test/index.haml').
+        subject.send(:_output_paths, 'test/index.haml').
                   should eq(['test/index.txt'])
       end
 
       it 'should return test/index.php.haml as test/index.php due to the second extension' do
-        subject.send(:get_output, 'test/index.php.haml').
+        subject.send(:_output_paths, 'test/index.php.haml').
                   should eq(['test/index.php'])
       end
     end
@@ -134,7 +143,7 @@ describe Guard::Haml do
       end
 
       it 'should return test/ignore/index.html.haml as [index.html]' do
-        subject.send(:get_output, 'test/ignore/index.html.haml').
+        subject.send(:_output_paths, 'test/ignore/index.html.haml').
                                     should eq(['index.html'])
       end
 
@@ -144,7 +153,7 @@ describe Guard::Haml do
         end
 
         it 'should return test/ignore/abc/index.html.haml as [demo/output/abc/index.html]' do
-          subject.send(:get_output, 'test/ignore/abc/index.html.haml').
+          subject.send(:_output_paths, 'test/ignore/abc/index.html.haml').
                           should eq(['demo/output/abc/index.html'])
         end
       end
@@ -152,37 +161,37 @@ describe Guard::Haml do
 
     context 'when the input file contains a second extension"' do
       it 'should return test/index.php.haml as [test/index.php]' do
-        subject.send(:get_output, 'test/index.php.haml').
+        subject.send(:_output_paths, 'test/index.php.haml').
                         should eq(['test/index.php'])
       end
     end
   end
 
-  describe '#get_file_name' do
+  describe '#_output_filename' do
     context 'by default (if a ".haml" extension has been defined)' do
       it 'should return the file name with the default extension ".html"' do
-        subject.send(:get_file_name, 'test/index.haml').
+        subject.send(:_output_filename, 'test/index.haml').
                      should eq('index.html')
       end
     end
 
     context 'if no extension has been defined at all' do
       it 'should return the file name with the default extension ".html"' do
-        subject.send(:get_file_name, 'test/index').
+        subject.send(:_output_filename, 'test/index').
                      should eq('index.html')
       end
     end
 
     context 'if an extension other than ".haml" has been defined' do
       it 'should return the file name with the default extension ".html"' do
-        subject.send(:get_file_name, 'test/index.foo').
+        subject.send(:_output_filename, 'test/index.foo').
                      should eq('index.foo.html')
       end
     end
 
     context 'if multiple extensions including ".haml" have been defined' do
       it 'should return the file name with the extension second to last' do
-        subject.send(:get_file_name, 'test/index.foo.haml').
+        subject.send(:_output_filename, 'test/index.foo.haml').
                      should eq('index.foo')
       end
     end
@@ -190,7 +199,8 @@ describe Guard::Haml do
 
   describe '#run_on_changes' do
     it 'should notify other guards upon completion' do
-      subject.should_receive(:notify).with([])
+      subject.should_receive(:_notify_other_guard_plugins).with([])
+
       subject.run_on_changes([])
     end
 
@@ -218,7 +228,7 @@ describe Guard::Haml do
 
       context 'with two outputs' do
         before do
-          subject_notifiable.stub(:get_output).and_return(["#{@fixture_path}/test.html", "#{@fixture_path}/test2.html"])
+          subject_notifiable.stub(:_output_paths).and_return(["#{@fixture_path}/test.html", "#{@fixture_path}/test2.html"])
         end
 
         after do
