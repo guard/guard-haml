@@ -50,7 +50,7 @@ end
 
 ### Configuring the output destination
 
-If you want to change the output directory use the `output` option in your
+If you want to change the output directory use the `:output` option in your
 Guardfile, e.g.:
 
 ```ruby
@@ -63,18 +63,20 @@ This output is relative to the Guardfile.
 
 ### Multiple output option
 
-This lets you compile to two (or more) html files from one haml file. This comes in handy if you want to compile to both a dev and prod build directory, for example:
+This lets you compile to two (or more) html files from one haml file. This
+comes in handy if you want to compile to both a dev and prod build directory,
+for instance:
 
 ```ruby
-guard :haml, { input: 'markup', output: ['public/dev', 'public/build'] } do
-  watch(%r{^.+(\.haml)$})
+guard :haml, input: 'markup', output: ['public/dev', 'public/build'] do
+  watch %r{^.+(\.haml)$}
 end
 ```
 
-If you maintain your haml files in a directory that should not be part of the output path, you can set the `input` option, e.g.:
+If you maintain your haml files in a directory that should not be part of the output path, you can set the `:input` option, e.g.:
 
 ```ruby
-guard :haml, output: 'public', input: 'src' do
+guard :haml, input: 'src', output: 'public' do
   watch %r{^src/.+(\.html\.haml)}
 end
 ```
@@ -83,7 +85,7 @@ it will be saved to `public/partials/_partial.html` without the `src`.
 
 ### File extensions
 
-The guard extension will try to add the correct extension based off the input file name. You can provide multiple extensions to control the file name.
+Guard::Haml will try to add the correct extension based on the input file name. You can provide multiple extensions to control the file name.
 
 ```ruby
 "foo.haml"     -> "foo.html"
@@ -92,7 +94,7 @@ The guard extension will try to add the correct extension based off the input fi
 "foo.php.haml" -> "foo.php"
 ```
 
-You can override the default extension (`html`) using the `default_ext` option:
+You can override the default extension (`html`) using the `:default_ext` option:
 
 ```ruby
 guard :haml, default_ext: 'txt' do
@@ -102,7 +104,7 @@ end
 
 ### Compile when starting guard
 
-If you want to compile haml files on guard start you can use `run_at_start` option.
+If you want to compile haml files when Guard starts you can use `:run_at_start` option.
 
 ```ruby
 guard :haml, output: 'public', input: 'src', run_at_start: true do
@@ -112,7 +114,7 @@ end
 
 ### Guard notifications
 
-Also you can configure guard notifications (to Growl/lib-notify/Notifu) by setting `notifications` option to `true`
+You can disable Guard notifications by setting `:notifications` option to `false`:
 
 ```ruby
 guard 'haml', output: 'public', input: 'src', notifications: true do
@@ -122,7 +124,7 @@ end
 
 ### Configuring HAML
 
-If you want to pass options to the Haml engine, you can set the `haml_options` option, e.g.:
+If you want to pass options to the Haml engine, you can set the `:haml_options` option, e.g.:
 
 ```ruby
 guard :haml, output: 'public', input: 'src', haml_options: { ugly: true } do
@@ -131,6 +133,18 @@ end
 ```
 
 This will produce compressed HTML. See [Haml Reference](http://haml.info/docs/yardoc/file.HAML_REFERENCE.html#options) for more details.
+
+### List of available options
+
+``` ruby
+input: 'markup'                        # define the folder where your HAML files are stored
+output: ['public/dev', 'public/build'] # define the output folder where conpiled HAML files are saved
+default_ext: 'txt'                     # override the default extension (`html`)
+run_at_start: false                    # compile haml files when Guard starts, default: false
+notifications: false                   # enable/disable Guard notifications, default: true
+haml_options: { ugly: true }           # HAML options (passed directly to HAML), default: {}
+auto_append_file_ext: false            # automatically append `.html` to the generated files, default: true
+```
 
 ## Development
 
