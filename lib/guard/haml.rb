@@ -7,14 +7,18 @@ module Guard
   class Haml < Plugin
     autoload :Notifier, 'guard/haml/notifier'
 
-    def initialize(options = {})
-      @options = {
+    def initialize(opts = {})
+      opts = {
         notifications:        true,
         default_ext:          'html',
         auto_append_file_ext: false
-      }.merge options
+      }.merge(opts)
 
-      super(@options)
+      super(opts)
+
+      if options[:input]
+        watchers << ::Guard::Watcher.new(%r{^#{options[:input]}/(.+(\.html)?\.haml)$})
+      end
     end
 
     def start

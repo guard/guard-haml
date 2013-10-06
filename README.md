@@ -27,6 +27,27 @@ $ guard init haml
 
 ## Options
 
+### Configuring the input folder + automatic watchers generation
+
+Use the `:input` option to define the folder where your HAML files are stored.
+This options also ensure the input folder won't be part of the output path.
+
+If you set the `:input` option and don't define any watchers, Guard::Haml will
+automatically generates watchers with the pattern
+`%r{^#{options[:input]}/(.+(\.html)?\.haml)$}`. For instance:
+
+```ruby
+guard :haml, input: 'markup'
+```
+
+is equivalent to:
+
+```ruby
+guard :haml, input: 'markup' do
+  watch %r{^markup/(.+(\.html)?\.haml)$}
+end
+```
+
 ### Configuring the output destination
 
 If you want to change the output directory use the `output` option in your
