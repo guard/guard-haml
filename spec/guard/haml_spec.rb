@@ -253,7 +253,7 @@ describe Guard::Haml do
 
     context 'when notifications option set to true' do
       it 'should call Notifier.notify when an error occurs' do
-        message = "HAML compilation failed!\n"
+        message = "HAML compilation of #{@fixture_path}/fail_test.html.haml failed!\n"
         message += "Error: Illegal nesting: content can't be both given on the same line as %p and nested within it."
         notifier.should_receive(:notify).with(false, message)
         catch(:task_has_failed) do
