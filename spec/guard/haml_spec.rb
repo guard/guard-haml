@@ -135,8 +135,6 @@ describe Guard::Haml do
       end
     end
 
-
-
     context 'when the exclude_base_dir option is set to "test/ignore"' do
       before do
         subject.options[:input] = 'test/ignore'
@@ -198,12 +196,6 @@ describe Guard::Haml do
   end
 
   describe '#run_on_changes' do
-    it 'should notify other guards upon completion' do
-      subject.should_receive(:_notify_other_guard_plugins).with([])
-
-      subject.run_on_changes([])
-    end
-
     context 'when notifications option set to true' do
       let(:success_message) { "Successfully compiled haml to html!\n" }
 

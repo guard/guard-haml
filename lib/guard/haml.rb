@@ -52,8 +52,6 @@ module Guard
         ::Guard::UI.info message
         Notifier.notify(true, message) if options[:notifications]
       end
-
-      _notify_other_guard_plugins(paths)
     end
 
     private
@@ -128,13 +126,6 @@ module Guard
       return unless options[:auto_append_file_ext]
 
       filename.match("\.html?").nil?
-    end
-
-    def _notify_other_guard_plugins(changed_files)
-      ::Guard.guards.reject { |guard| guard == self }.each do |guard|
-        paths = Watcher.match_files(guard, changed_files)
-        guard.run_on_changes(paths) unless paths.empty?
-      end
     end
   end
 end
