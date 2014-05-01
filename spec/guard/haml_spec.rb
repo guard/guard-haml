@@ -28,7 +28,7 @@ describe Guard::Haml do
 
       it 'generates watchers automatically' do
         plugin.watchers.should have(1).item
-        plugin.watchers[0].pattern.should eq %r{^markup/(.+(\.html)?\.haml)$}
+        plugin.watchers[0].pattern.should eq %r{^markup/([\w\-_]+(\.html)?\.haml)$}
       end
     end
   end

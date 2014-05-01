@@ -17,7 +17,7 @@ module Guard
       super(opts)
 
       if options[:input]
-        watchers << ::Guard::Watcher.new(%r{^#{options[:input]}/(.+(\.html)?\.haml)$})
+        watchers << ::Guard::Watcher.new(%r{^#{options[:input]}/([\w\-_]+(\.html)?\.haml)$})
       end
     end
 
