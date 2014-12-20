@@ -1,5 +1,5 @@
 # encoding: utf-8
-$:.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'guard/haml/version'
 
 Gem::Specification.new do |s|
@@ -20,6 +20,6 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'bundler'
 
-  s.files        = Dir.glob('{lib}/**/*') + %w[CHANGELOG.md LICENSE README.md]
+  s.files        = Dir.glob('{lib}/**/*') + %w(CHANGELOG.md LICENSE README.md)
   s.require_path = 'lib'
 end

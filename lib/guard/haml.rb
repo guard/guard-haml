@@ -48,7 +48,7 @@ module Guard
         end
 
         message = "Successfully compiled haml to html!\n"
-        message += "# #{file} -> #{output_paths.join(', ')}".gsub("#{::Bundler.root.to_s}/", '')
+        message += "# #{file} -> #{output_paths.join(', ')}".gsub("#{::Bundler.root}/", '')
         ::Guard::UI.info message
         Notifier.notify(true, message) if options[:notifications]
       end
@@ -57,16 +57,14 @@ module Guard
     private
 
     def compile_haml(file)
-      begin
-        content = File.new(file).read
-        engine  = ::Haml::Engine.new(content, (options[:haml_options] || {}))
-        engine.render
-      rescue StandardError => error
-        message = "HAML compilation of #{file} failed!\nError: #{error.message}"
-        ::Guard::UI.error message
-        Notifier.notify(false, message) if options[:notifications]
-        throw :task_has_failed
-      end
+      content = File.new(file).read
+      engine  = ::Haml::Engine.new(content, (options[:haml_options] || {}))
+      engine.render
+    rescue StandardError => error
+      message = "HAML compilation of #{file} failed!\nError: #{error.message}"
+      ::Guard::UI.error message
+      Notifier.notify(false, message) if options[:notifications]
+      throw :task_has_failed
     end
 
     # Get the file path to output the html based on the file being

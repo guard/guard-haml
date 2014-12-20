@@ -1,11 +1,11 @@
-require "guard/haml"
+require 'guard/haml'
 
 RSpec.describe Guard::Haml do
   let(:subject_with_options) { described_class.new(notifications: false, run_at_start: true) }
-  let(:subject_notifiable) { described_class.new(notifications: true ) }
+  let(:subject_notifiable) { described_class.new(notifications: true) }
   let(:notifier) { Guard::Haml::Notifier }
 
-  describe "class" do
+  describe 'class' do
     it 'should autoload Notifier class' do
       expect { Guard::Haml::Notifier }.not_to raise_error
     end
@@ -16,7 +16,7 @@ RSpec.describe Guard::Haml do
       specify { expect(subject.options[:notifications]).to be_truthy }
     end
 
-    context "when receives options hash" do
+    context 'when receives options hash' do
       it 'should merge it to @options instance variable' do
         expect(subject_with_options.options[:notifications]).to be_falsey
         expect(subject_with_options.options[:run_at_start]).to be_truthy
@@ -82,18 +82,18 @@ RSpec.describe Guard::Haml do
   describe '#_output_paths' do
     context 'by default' do
       it 'should return test/index.html.haml as [test/index.html]' do
-        expect(subject.send(:_output_paths, 'test/index.html.haml')).
-                        to eq(['test/index.html'])
+        expect(subject.send(:_output_paths, 'test/index.html.haml'))
+          .to eq(['test/index.html'])
       end
 
       it 'should return test/index.htm.haml as [test/index.htm]' do
-        expect(subject.send(:_output_paths, 'test/index.htm.haml')).
-                        to eq(['test/index.htm'])
+        expect(subject.send(:_output_paths, 'test/index.htm.haml'))
+          .to eq(['test/index.htm'])
       end
 
       it 'should return test/index.haml as [test/index.html]' do
-        expect(subject.send(:_output_paths, 'test/index.haml')).
-                        to eq(['test/index.html'])
+        expect(subject.send(:_output_paths, 'test/index.haml'))
+          .to eq(['test/index.html'])
       end
     end
 
@@ -103,8 +103,8 @@ RSpec.describe Guard::Haml do
       end
 
       it 'should return test/index.html.haml as [demo/output/test/index.html.haml]' do
-        expect(subject.send(:_output_paths, 'test/index.html.haml')).
-                  to eq(['demo/output/test/index.html'])
+        expect(subject.send(:_output_paths, 'test/index.html.haml'))
+          .to eq(['demo/output/test/index.html'])
       end
     end
 
@@ -114,8 +114,8 @@ RSpec.describe Guard::Haml do
       end
 
       it 'should return test/index.html.haml as [demo1/output/test/index.html.haml, demo2/output/test/index.html.haml]' do
-        expect(subject.send(:_output_paths, 'test/index.html.haml')).
-                  to eq(['demo1/output/test/index.html', 'demo2/output/test/index.html'])
+        expect(subject.send(:_output_paths, 'test/index.html.haml'))
+          .to eq(['demo1/output/test/index.html', 'demo2/output/test/index.html'])
       end
     end
 
@@ -125,13 +125,13 @@ RSpec.describe Guard::Haml do
       end
 
       it 'should return test/index.haml as test/index.txt' do
-        expect(subject.send(:_output_paths, 'test/index.haml')).
-                  to eq(['test/index.txt'])
+        expect(subject.send(:_output_paths, 'test/index.haml'))
+          .to eq(['test/index.txt'])
       end
 
       it 'should return test/index.php.haml as test/index.php due to the second extension' do
-        expect(subject.send(:_output_paths, 'test/index.php.haml')).
-                  to eq(['test/index.php'])
+        expect(subject.send(:_output_paths, 'test/index.php.haml'))
+          .to eq(['test/index.php'])
       end
     end
 
@@ -141,8 +141,8 @@ RSpec.describe Guard::Haml do
       end
 
       it 'should return test/ignore/index.html.haml as [index.html]' do
-        expect(subject.send(:_output_paths, 'test/ignore/index.html.haml')).
-                                    to eq(['index.html'])
+        expect(subject.send(:_output_paths, 'test/ignore/index.html.haml'))
+          .to eq(['index.html'])
       end
 
       context 'when the output option is set to "demo/output"' do
@@ -151,16 +151,16 @@ RSpec.describe Guard::Haml do
         end
 
         it 'should return test/ignore/abc/index.html.haml as [demo/output/abc/index.html]' do
-          expect(subject.send(:_output_paths, 'test/ignore/abc/index.html.haml')).
-                          to eq(['demo/output/abc/index.html'])
+          expect(subject.send(:_output_paths, 'test/ignore/abc/index.html.haml'))
+            .to eq(['demo/output/abc/index.html'])
         end
       end
     end
 
     context 'when the input file contains a second extension"' do
       it 'should return test/index.php.haml as [test/index.php]' do
-        expect(subject.send(:_output_paths, 'test/index.php.haml')).
-                        to eq(['test/index.php'])
+        expect(subject.send(:_output_paths, 'test/index.php.haml'))
+          .to eq(['test/index.php'])
       end
     end
   end
@@ -168,29 +168,29 @@ RSpec.describe Guard::Haml do
   describe '#_output_filename' do
     context 'by default (if a ".haml" extension has been defined)' do
       it 'should return the file name with the default extension ".html"' do
-        expect(subject.send(:_output_filename, 'test/index.haml')).
-                     to eq('index.html')
+        expect(subject.send(:_output_filename, 'test/index.haml'))
+          .to eq('index.html')
       end
     end
 
     context 'if no extension has been defined at all' do
       it 'should return the file name with the default extension ".html"' do
-        expect(subject.send(:_output_filename, 'test/index')).
-                     to eq('index.html')
+        expect(subject.send(:_output_filename, 'test/index'))
+          .to eq('index.html')
       end
     end
 
     context 'if an extension other than ".haml" has been defined' do
       it 'should return the file name with the default extension ".html"' do
-        expect(subject.send(:_output_filename, 'test/index.foo')).
-                     to eq('index.foo.html')
+        expect(subject.send(:_output_filename, 'test/index.foo'))
+          .to eq('index.foo.html')
       end
     end
 
     context 'if multiple extensions including ".haml" have been defined' do
       it 'should return the file name with the extension second to last' do
-        expect(subject.send(:_output_filename, 'test/index.foo.haml')).
-                     to eq('index.foo')
+        expect(subject.send(:_output_filename, 'test/index.foo.haml'))
+          .to eq('index.foo')
       end
     end
   end
@@ -205,7 +205,7 @@ RSpec.describe Guard::Haml do
         end
 
         it 'should call Notifier.notify with 1 output' do
-          message = success_message + "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
+          message = success_message + '# spec/fixtures/test.html.haml -> spec/fixtures/test.html'
           expect(notifier).to receive(:notify).with(true, message)
           subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
         end
@@ -213,7 +213,7 @@ RSpec.describe Guard::Haml do
 
       it 'should call Notifier.notify' do
         message = "Successfully compiled haml to html!\n"
-        message += "# spec/fixtures/test.html.haml -> spec/fixtures/test.html"
+        message += '# spec/fixtures/test.html.haml -> spec/fixtures/test.html'
         expect(notifier).to receive(:notify).with(true, message)
         subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
       end
@@ -229,7 +229,7 @@ RSpec.describe Guard::Haml do
         end
 
         it 'should call Notifier.notify with 2 outputs' do
-          message = success_message + "# spec/fixtures/test.html.haml -> spec/fixtures/test.html, spec/fixtures/test2.html"
+          message = success_message + '# spec/fixtures/test.html.haml -> spec/fixtures/test.html, spec/fixtures/test2.html'
           expect(notifier).to receive(:notify).with(true, message)
           subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
         end
@@ -239,8 +239,8 @@ RSpec.describe Guard::Haml do
 
   describe '#compile_haml' do
     it 'throws :task_has_failed when an error occurs' do
-      expect { subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml") }.
-              to throw_symbol :task_has_failed
+      expect { subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml") }
+        .to throw_symbol :task_has_failed
     end
 
     context 'when notifications option set to true' do
@@ -251,7 +251,6 @@ RSpec.describe Guard::Haml do
         expect(catch(:task_has_failed) do
           subject_notifiable.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
         end).to be_nil
-
       end
     end
   end
