@@ -1,9 +1,15 @@
+require 'guard/compat/test/helper'
+
 require 'guard/haml'
 
 RSpec.describe Guard::Haml do
   let(:subject_with_options) { described_class.new(notifications: false, run_at_start: true) }
   let(:subject_notifiable) { described_class.new(notifications: true) }
   let(:notifier) { Guard::Haml::Notifier }
+
+  before do
+    allow(Guard::Compat::UI).to receive(:info)
+  end
 
   describe 'class' do
     it 'should autoload Notifier class' do
@@ -20,15 +26,6 @@ RSpec.describe Guard::Haml do
       it 'should merge it to @options instance variable' do
         expect(subject_with_options.options[:notifications]).to be_falsey
         expect(subject_with_options.options[:run_at_start]).to be_truthy
-      end
-    end
-
-    context 'with no watchers and the :input option' do
-      let(:plugin) { described_class.new(input: 'markup') }
-
-      it 'generates watchers automatically' do
-        expect(plugin.watchers.size).to eq(1)
-        expect(plugin.watchers[0].pattern).to eq %r{^markup/([\w\-_]+(\.html)?\.haml)$}
       end
     end
   end
@@ -73,8 +70,8 @@ RSpec.describe Guard::Haml do
 
   describe '#run_all' do
     it 'should rebuild all files being watched' do
+      expect(Guard::Compat).to receive(:matching_files).and_return([])
       allow(subject).to receive(:run_on_changes).with([]).and_return([])
-      allow(Guard).to receive(:guards).and_return([subject])
       subject.run_all
     end
   end
@@ -206,6 +203,7 @@ RSpec.describe Guard::Haml do
 
         it 'should call Notifier.notify with 1 output' do
           message = success_message + '# spec/fixtures/test.html.haml -> spec/fixtures/test.html'
+          allow(Guard::Compat::UI).to receive(:info)
           expect(notifier).to receive(:notify).with(true, message)
           subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
         end
@@ -230,6 +228,7 @@ RSpec.describe Guard::Haml do
 
         it 'should call Notifier.notify with 2 outputs' do
           message = success_message + '# spec/fixtures/test.html.haml -> spec/fixtures/test.html, spec/fixtures/test2.html'
+          allow(Guard::Compat::UI).to receive(:info)
           expect(notifier).to receive(:notify).with(true, message)
           subject_notifiable.run_on_changes(["#{@fixture_path}/test.html.haml"])
         end
@@ -239,6 +238,8 @@ RSpec.describe Guard::Haml do
 
   describe '#compile_haml' do
     it 'throws :task_has_failed when an error occurs' do
+      allow(Guard::Compat::UI).to receive(:error)
+      allow(Guard::Compat::UI).to receive(:notify)
       expect { subject.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml") }
         .to throw_symbol :task_has_failed
     end
@@ -248,6 +249,7 @@ RSpec.describe Guard::Haml do
         message = "HAML compilation of #{@fixture_path}/fail_test.html.haml failed!\n"
         message += "Error: Illegal nesting: content can't be both given on the same line as %p and nested within it."
         expect(notifier).to receive(:notify).with(false, message)
+        allow(Guard::Compat::UI).to receive(:error)
         expect(catch(:task_has_failed) do
           subject_notifiable.send(:compile_haml, "#{@fixture_path}/fail_test.html.haml")
         end).to be_nil

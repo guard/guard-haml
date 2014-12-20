@@ -1,4 +1,4 @@
-require 'guard/haml'
+require 'guard/haml/notifier'
 
 RSpec.describe Guard::Haml::Notifier do
   subject { described_class }
@@ -16,7 +16,7 @@ RSpec.describe Guard::Haml::Notifier do
   describe '#notify' do
     context 'when recieves true with message' do
       it 'should call Guard::Notifier with success image' do
-        expect(::Guard::Notifier).to receive(:notify).with(
+        expect(Guard::Compat::UI).to receive(:notify).with(
             'Successful compilation!',
             title: 'Guard::Haml',
             image: :success
@@ -27,7 +27,7 @@ RSpec.describe Guard::Haml::Notifier do
 
     context 'when recieves false with message' do
       it 'should call Guard::Notifier with failed image' do
-        expect(::Guard::Notifier).to receive(:notify).with(
+        expect(Guard::Compat::UI).to receive(:notify).with(
                 'Compilation failed!',
                 title: 'Guard::Haml',
                 image: :failed

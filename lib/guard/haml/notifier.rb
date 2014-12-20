@@ -1,7 +1,9 @@
 # encoding: utf-8
 
+require 'guard/haml'
+
 module Guard
-  class Haml
+  class Haml < Plugin
     class Notifier
       class << self
         def image(result)
@@ -9,10 +11,7 @@ module Guard
         end
 
         def notify(result, message)
-          ::Guard::Notifier.notify(message,
-                                   title: 'Guard::Haml',
-                                   image: image(result)
-                                  )
+          Compat::UI.notify(message, title: 'Guard::Haml', image: image(result))
         end
       end
     end
