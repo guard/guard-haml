@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Guard::Haml::Notifier do
+RSpec.describe Guard::Haml::Notifier do
   subject { described_class }
 
   describe '#image' do

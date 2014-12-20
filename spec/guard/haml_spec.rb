@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Guard::Haml do
+RSpec.describe Guard::Haml do
   let(:subject_with_options) { described_class.new(notifications: false, run_at_start: true) }
   let(:subject_notifiable) { described_class.new(notifications: true ) }
   let(:notifier) { Guard::Haml::Notifier }
