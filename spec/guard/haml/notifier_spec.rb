@@ -1,3 +1,5 @@
+require 'guard/haml'
+
 RSpec.describe Guard::Haml::Notifier do
   subject { described_class }
 
