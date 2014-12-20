@@ -7,6 +7,7 @@ gem 'rake'
 group :development do
   gem 'ruby_gntp'
   gem 'guard-rspec'
+  gem 'transpec'
 end
 
 # The test group will be
