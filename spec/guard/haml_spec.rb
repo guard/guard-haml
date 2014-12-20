@@ -1,3 +1,5 @@
+require "guard/haml"
+
 RSpec.describe Guard::Haml do
   let(:subject_with_options) { described_class.new(notifications: false, run_at_start: true) }
   let(:subject_notifiable) { described_class.new(notifications: true ) }
@@ -71,7 +73,7 @@ RSpec.describe Guard::Haml do
 
   describe '#run_all' do
     it 'should rebuild all files being watched' do
-      allow(Guard::Haml).to receive(:run_on_change).with([]).and_return([])
+      allow(subject).to receive(:run_on_changes).with([]).and_return([])
       allow(Guard).to receive(:guards).and_return([subject])
       subject.run_all
     end
