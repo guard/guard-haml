@@ -16,4 +16,5 @@ end
 group :test do
   gem 'rspec', '~> 3.1'
   gem 'coveralls', require: false
+  gem 'rubocop', require: false
 end
