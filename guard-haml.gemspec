@@ -1,5 +1,5 @@
 # encoding: utf-8
-$:.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path('../lib', __FILE__)
 require 'guard/haml/version'
 
 Gem::Specification.new do |s|
@@ -16,11 +16,11 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.9.2'
 
   s.add_runtime_dependency 'guard', '~> 2.0'
+  s.add_runtime_dependency 'guard-compat', '~> 1.1'
   s.add_runtime_dependency 'haml',  '>= 3.0'
 
   s.add_development_dependency 'bundler'
-  s.add_development_dependency 'rspec'
 
-  s.files        = Dir.glob('{lib}/**/*') + %w[CHANGELOG.md LICENSE README.md]
+  s.files        = Dir.glob('{lib}/**/*') + %w(CHANGELOG.md LICENSE README.md)
   s.require_path = 'lib'
 end

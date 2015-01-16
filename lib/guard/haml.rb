@@ -1,13 +1,14 @@
-require 'guard'
-require 'guard/plugin'
-require 'guard/watcher'
 require 'haml'
+
+require 'guard/compat/plugin'
+
+require 'guard/haml/notifier'
 
 module Guard
   class Haml < Plugin
-    autoload :Notifier, 'guard/haml/notifier'
-
     def initialize(opts = {})
+      @patterns = []
+
       opts = {
         notifications:        true,
         default_ext:          'html',
@@ -15,10 +16,6 @@ module Guard
       }.merge(opts)
 
       super(opts)
-
-      if options[:input]
-        watchers << ::Guard::Watcher.new(%r{^#{options[:input]}/([\w\-_]+(\.html)?\.haml)$})
-      end
     end
 
     def start
@@ -34,7 +31,7 @@ module Guard
     end
 
     def run_all
-      run_on_changes(Watcher.match_files(self, Dir.glob(File.join('**', '*.*'))))
+      run_on_changes(Compat.matching_files(self, Dir.glob(File.join('**', '*.*'))))
     end
 
     def run_on_changes(paths)
@@ -48,8 +45,8 @@ module Guard
         end
 
         message = "Successfully compiled haml to html!\n"
-        message += "# #{file} -> #{output_paths.join(', ')}".gsub("#{::Bundler.root.to_s}/", '')
-        ::Guard::UI.info message
+        message += "# #{file} -> #{output_paths.join(', ')}".gsub("#{::Bundler.root}/", '')
+        Compat::UI.info message
         Notifier.notify(true, message) if options[:notifications]
       end
     end
@@ -57,16 +54,14 @@ module Guard
     private
 
     def compile_haml(file)
-      begin
-        content = File.new(file).read
-        engine  = ::Haml::Engine.new(content, (options[:haml_options] || {}))
-        engine.render
-      rescue StandardError => error
-        message = "HAML compilation of #{file} failed!\nError: #{error.message}"
-        ::Guard::UI.error message
-        Notifier.notify(false, message) if options[:notifications]
-        throw :task_has_failed
-      end
+      content = File.new(file).read
+      engine  = ::Haml::Engine.new(content, (options[:haml_options] || {}))
+      engine.render
+    rescue StandardError => error
+      message = "HAML compilation of #{file} failed!\nError: #{error.message}"
+      Compat::UI.error message
+      Notifier.notify(false, message) if options[:notifications]
+      throw :task_has_failed
     end
 
     # Get the file path to output the html based on the file being

@@ -1,18 +1,17 @@
 # encoding: utf-8
 
+require 'guard/haml'
+
 module Guard
-  class Haml
+  class Haml < Plugin
     class Notifier
       class << self
-        def image result
+        def image(result)
           result ? :success : :failed
         end
 
-        def notify( result, message )
-          ::Guard::Notifier.notify( message, 
-                                    title: 'Guard::Haml', 
-                                    image: image( result ) 
-                                  )
+        def notify(result, message)
+          Compat::UI.notify(message, title: 'Guard::Haml', image: image(result))
         end
       end
     end

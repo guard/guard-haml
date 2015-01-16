@@ -6,6 +6,11 @@
 # notifications: true                send notifictions to Growl/libnotify/Notifu
 # haml_options: { ugly: true }    pass options to the Haml engine
 
-guard :haml do
+haml_opts = {
+  input: 'src'
+}
+
+guard :haml, haml_opts do
   watch(/^.+(\.html\.haml)$/)
+  watch(%r{^#{haml_opts[:input]}/([\w\-_]+(\.html)?\.haml)$})
 end
