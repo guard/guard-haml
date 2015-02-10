@@ -144,6 +144,7 @@ run_at_start: false                    # compile haml files when Guard starts, d
 notifications: false                   # enable/disable Guard notifications, default: true
 haml_options: { ugly: true }           # HAML options (passed directly to HAML), default: {}
 auto_append_file_ext: false            # automatically append `.html` to the generated files, default: true
+helper_modules: [MyHelper]             # List of modules be accessible by the HAML files during compilation, default: []
 ```
 
 ## Development

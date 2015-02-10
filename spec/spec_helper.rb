@@ -1,3 +1,5 @@
+require 'bundler'
+require 'rake/ext/pathname'
 require 'coveralls'
 Coveralls.wear!
 
