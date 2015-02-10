@@ -12,7 +12,8 @@ module Guard
       opts = {
         notifications:        true,
         default_ext:          'html',
-        auto_append_file_ext: false
+        auto_append_file_ext: false,
+        helper_modules:       []
       }.merge(opts)
 
       super(opts)
@@ -56,12 +57,20 @@ module Guard
     def compile_haml(file)
       content = File.new(file).read
       engine  = ::Haml::Engine.new(content, (options[:haml_options] || {}))
-      engine.render
+      engine.render scope_object
     rescue StandardError => error
       message = "HAML compilation of #{file} failed!\nError: #{error.message}"
       Compat::UI.error message
       Notifier.notify(false, message) if options[:notifications]
       throw :task_has_failed
+    end
+
+    def scope_object
+      scope = Object.new
+      @options[:helper_modules].each do |mod|
+        scope.extend mod
+      end
+      scope
     end
 
     # Get the file path to output the html based on the file being
@@ -113,7 +122,7 @@ module Guard
           [base_name, extensions].flatten.join('.')
         end
       else
-        [base_name, extensions, options[:default_ext]].flatten.join('.')
+        [base_name, extensions, options[:default_ext]].flatten.compact.join('.')
       end
     end
 
