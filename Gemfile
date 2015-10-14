@@ -1,20 +1,20 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
 gemspec
 
-gem 'rake'
+gem "rake"
 
 group :development do
-  gem 'ruby_gntp'
-  gem 'guard-rspec'
-  gem 'transpec'
+  gem "ruby_gntp"
+  gem "guard-rspec"
+  gem "transpec"
 end
 
 # The test group will be
 # installed on Travis CI
 #
 group :test do
-  gem 'rspec', '~> 3.1'
-  gem 'coveralls', require: false
-  gem 'rubocop', require: false
+  gem "rspec", "~> 3.1", require: false
+  gem "codeclimate-test-reporter", require: nil
+  gem "rubocop", require: false
 end

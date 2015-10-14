@@ -1,11 +1,11 @@
 # Guard::Haml
 
-[![Gem Version](https://badge.fury.io/rb/guard-haml.png)](http://badge.fury.io/rb/guard-haml) [![Build Status](https://travis-ci.org/guard/guard-haml.png?branch=master)](https://travis-ci.org/guard/guard-haml) [![Dependency Status](https://gemnasium.com/guard/guard-haml.png)](https://gemnasium.com/guard/guard-haml) [![Code Climate](https://codeclimate.com/github/guard/guard-haml.png)](https://codeclimate.com/github/guard/guard-haml) [![Coverage Status](https://coveralls.io/repos/guard/guard-haml/badge.png?branch=master)](https://coveralls.io/r/guard/guard-haml)
+[![Gem Version](https://img.shields.io/gem/v/guard-haml.svg?style=flat)](https://rubygems.org/gems/guard-haml) [![Build Status](https://travis-ci.org/guard/guard-haml.png?branch=master)](https://travis-ci.org/guard/guard-haml) [![Dependency Status](https://gemnasium.com/guard/guard-haml.png)](https://gemnasium.com/guard/guard-haml) [![Code Climate](https://codeclimate.com/github/guard/guard-haml.png)](https://codeclimate.com/github/guard/guard-haml) [![Test Coverage](https://codeclimate.com/github/guard/guard-haml/badges/coverage.svg)](https://codeclimate.com/github/guard/guard-haml)
 
 Watches HAML files, compiles them to HTML on change.
 
 * Compatible with HAML >= 3.
-* Tested against Ruby 1.9.3, 2.0.0, Rubinius & JRuby (1.9 mode only).
+* Tested against Ruby 2.0, 2.1, 2.2, Rubinius & JRuby (1.9 mode only).
 
 ## Install
 
