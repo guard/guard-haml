@@ -278,5 +278,11 @@ RSpec.describe Guard::Haml do
         end).to be_nil
       end
     end
+
+    it 'correctly resolves __FILE__ and __dir__' do
+      html = subject.send(:compile_haml, "#{@fixture_path}/filename.html.haml")
+      expect(html).to match(%r{__FILE__ = #{@fixture_path}/filename\.html})
+      expect(html).to match(/__dir__ = #{@fixture_path}/)
+    end
   end
 end
