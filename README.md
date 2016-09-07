@@ -5,7 +5,7 @@
 Watches HAML files, compiles them to HTML on change.
 
 * Compatible with HAML >= 3.
-* Tested against Ruby 2.0, 2.1, 2.2, Rubinius & JRuby (1.9 mode only).
+* Tested against Ruby 2.2.5, 2.3.1, Rubinius & JRuby (1.9 mode only).
 
 ## Install
 
